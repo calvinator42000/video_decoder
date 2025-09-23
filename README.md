@@ -3,7 +3,10 @@ Decoder for international video formats.
 
 This is just a fun project for me to fiddle with. It's nothing revolutionary but I enjoy the challenge.
 
-## `ffplay` commands
+## Test Files
+Files come from this like: https://engineering.purdue.edu/~reibman/ece634/Videos/video_files.htm
+
+## `ffplay` Commands
 
 ### Playing YUV:
 `ffplay -f rawvideo -pixel_format yuv420p -video_size <width>x<height> -i <input_yuv>`

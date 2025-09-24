@@ -1,5 +1,7 @@
 #include <main.h>
 
+Context* ctx;
+
 int main(int argc, char* argv[]) {
 
     if (argc < 2) {
@@ -11,8 +13,6 @@ int main(int argc, char* argv[]) {
 
     FILE *fptr;
     long filesize;
-    unsigned char *buffer;
-    BufferContext* ctx = malloc(sizeof(BufferContext));
 
     fptr = fopen(input_file_name, "rb");
     if (fptr == NULL) {
@@ -35,24 +35,30 @@ int main(int argc, char* argv[]) {
     rewind(fptr);
     printf("File size: %ld bytes\n", filesize);
 
-    buffer = malloc(sizeof(unsigned char) * filesize);
-    if (buffer == NULL) {
+    ctx = malloc(sizeof(Context));
+    if (ctx == NULL) {
         printf("Memory allocation failed!\n");
         fclose(fptr);
         exit(1);
     }
-    size_t read_size = fread(buffer, sizeof(unsigned char), filesize, fptr);
-    if (read_size != filesize) {
-        printf("Error reading file!\n");
-        free(buffer);
+    ctx->data = malloc(sizeof(uint8_t) * filesize);
+    if (ctx->data == NULL) {
+        printf("Memory allocation failed!\n");
+        freeContext();
         fclose(fptr);
         exit(1);
     }
+    ctx->size = fread(ctx->data, sizeof(uint8_t), filesize, fptr);
+    if (ctx->size != filesize) {
+        printf("Error reading file!\n");
+        freeContext();
+        fclose(fptr);
+        exit(1);
+    }
+    fclose(fptr);
 
-    ctx->data = buffer;
     ctx->bit_offset = 0;
     ctx->byte_offset = 0;
-    ctx->size = read_size;
 
     // B.3 - Rec. ITU-T H.266 (V3) (09/2023)
     while ((ctx->byte_offset < ctx->size) &&
@@ -63,15 +69,13 @@ int main(int argc, char* argv[]) {
         if (ctx->byte_offset != leading_zero_8bits) {
             printf("Expected leading_zero_8bits at byte offset %zu, found 0x%02X\n",
                    ctx->byte_offset, ctx->data[ctx->byte_offset]);
-            free(buffer);
-            fclose(fptr);
+            freeContext();
             exit(1);
         }
         ctx->byte_offset += 1;
     }
     printf("Found start code at byte offset: %zu\n", ctx->byte_offset);
 
-    free(buffer);
-    fclose(fptr);
+    freeContext(ctx);
     return 0;
 }

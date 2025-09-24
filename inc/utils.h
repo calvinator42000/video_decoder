@@ -10,10 +10,13 @@ typedef struct {
     size_t byte_offset;
     size_t bit_offset;
     size_t size;
-} BufferContext;
+} Context;
+
+uint8_t readByte(size_t index);
 
 #define leading_zero_8bits 0x00
 #define zero_byte 0x00
 
+void freeContext();
 
 #endif // UTILS_H

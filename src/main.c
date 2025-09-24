@@ -12,6 +12,7 @@ int main(int argc, char* argv[]) {
     FILE *fptr;
     long filesize;
     unsigned char *buffer;
+    BufferContext* ctx = malloc(sizeof(BufferContext));
 
     fptr = fopen(input_file_name, "rb");
     if (fptr == NULL) {
@@ -48,13 +49,28 @@ int main(int argc, char* argv[]) {
         exit(1);
     }
 
-    printf("Read %zu bytes from file.\n", read_size);
+    ctx->data = buffer;
+    ctx->bit_offset = 0;
+    ctx->byte_offset = 0;
+    ctx->size = read_size;
 
-    printf("First 10 bytes of the file:\n");
-    for (size_t i = 0; i < 10 && i < read_size; i++) {
-        printf("%02X ", buffer[i]);
+    // B.3 - Rec. ITU-T H.266 (V3) (09/2023)
+    while ((ctx->byte_offset < ctx->size) &&
+           !(ctx->data[ctx->byte_offset] == 0x00 &&
+             ctx->data[ctx->byte_offset + 1] == 0x00 &&
+             ctx->data[ctx->byte_offset + 2] == 0x00 &&
+             ctx->data[ctx->byte_offset + 3] == 0x01)) {
+        if (ctx->byte_offset != leading_zero_8bits) {
+            printf("Expected leading_zero_8bits at byte offset %zu, found 0x%02X\n",
+                   ctx->byte_offset, ctx->data[ctx->byte_offset]);
+            free(buffer);
+            fclose(fptr);
+            exit(1);
+        }
+        ctx->byte_offset += 1;
     }
-    printf("\n");
+    printf("Found start code at byte offset: %zu\n", ctx->byte_offset);
+
     free(buffer);
     fclose(fptr);
     return 0;

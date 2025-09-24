@@ -12,7 +12,10 @@ typedef struct {
     size_t size;
 } Context;
 
+typedef unsigned int uint_t;
+
 uint8_t readByte(size_t index);
+size_t readBytes(size_t index, size_t length);
 
 #define leading_zero_8bits 0x00
 #define zero_byte 0x00

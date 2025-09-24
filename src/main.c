@@ -61,12 +61,8 @@ int main(int argc, char* argv[]) {
     ctx->byte_offset = 0;
 
     // B.3 - Rec. ITU-T H.266 (V3) (09/2023)
-    while ((ctx->byte_offset < ctx->size) &&
-           !(ctx->data[ctx->byte_offset] == 0x00 &&
-             ctx->data[ctx->byte_offset + 1] == 0x00 &&
-             ctx->data[ctx->byte_offset + 2] == 0x00 &&
-             ctx->data[ctx->byte_offset + 3] == 0x01)) {
-        if (ctx->byte_offset != leading_zero_8bits) {
+    while ((ctx->byte_offset < ctx->size) && !(readBytes(0, 4) == 0x00000001)) {
+        if (readByte(0) != leading_zero_8bits) {
             printf("Expected leading_zero_8bits at byte offset %zu, found 0x%02X\n",
                    ctx->byte_offset, ctx->data[ctx->byte_offset]);
             freeContext();

@@ -2,15 +2,6 @@
 
 extern Context* ctx;
 
-uint8_t readByte(size_t index) {
-    if (index >= ctx->size) {
-        fprintf(stderr, "Index out of bounds in read_byte: %zu\n", index);
-        freeContext();
-        exit(EXIT_FAILURE);
-    }
-    return ctx->data[ctx->byte_offset + index];
-}
-
 size_t readBytes(size_t index, size_t length) {
     if (index + length > ctx->size) {
         fprintf(stderr, "Index out of bounds in read_bytes: %zu + %zu\n", index, length);
@@ -19,9 +10,44 @@ size_t readBytes(size_t index, size_t length) {
     }
     size_t value = 0;
     for (size_t i = 0; i < length; i++) {
-        value = (value << 8) | readByte(index + i);
+        value = (value << 8) | ctx->data[ctx->bit_offset / 8 + index + i];
     }
     return value;
+}
+
+int more_data_in_byte_stream() {
+    return ctx->bit_offset < ctx->size * 8;
+}
+
+size_t next_bits(size_t n) {
+    size_t value;
+    if (n == 0) {
+        return 0;
+    }
+    // Read all bytes that are fully covered by the bits to read
+    size_t num_bytes = ((ctx->bit_offset % 8) + n + 7) / 8;
+    value = readBytes(0, num_bytes);
+    // Shift left to discard bits before the current bit_offset
+    value <<= (ctx->bit_offset % 8);
+    // Shift right to discard bits after the n bits we want
+    value >>= (num_bytes * 8 - n - (ctx->bit_offset % 8));
+    return value;
+}
+
+size_t read_bits(size_t n) {
+    size_t value = next_bits(n);
+    ctx->bit_offset += n;
+    return value;
+}
+
+void f(size_t n, size_t val) {
+    size_t initial_offset = ctx->bit_offset;
+    size_t val_read = read_bits(n);
+    if (val_read != val) {
+        fprintf(stderr, "Expected %zu bits with value 0x%zX, but got 0x%zX at byte index %zu\n", n, val, val_read, initial_offset / 8);
+        freeContext();
+        exit(EXIT_FAILURE);
+    }
 }
 
 void freeContext() {

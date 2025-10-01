@@ -13,7 +13,7 @@ size_t get_NumBytesInNALUnit() {
     return num_bytes;
 }
 
-size_t byte_stream_nal_unit(size_t NumBytesInNalUnit) {
+size_t byte_stream_nal_unit() {
     while(next_bits(24) != 0x000001 && next_bits(32) != 0x00000001) {
         f(8, leading_zero_8bits);
     }
@@ -21,9 +21,10 @@ size_t byte_stream_nal_unit(size_t NumBytesInNalUnit) {
         f(8, zero_byte);
     }
     f(24, start_code_prefix_one_3bytes);
-    printf("NAL Unit found at byte offset %zu, size: %zu bytes\n", ctx->bit_offset / 8 - 4, NumBytesInNalUnit);
+    size_t NumBytesInNalUnit = get_NumBytesInNALUnit();
+    printf("NAL Unit found at byte offset %zu, size: %zu bytes\n", ctx->bit_offset / 8, NumBytesInNalUnit);
     // nal_unit()
-    ctx->bit_offset += NumBytesInNalUnit * 8;
+    ctx->bit_offset += NumBytesInNalUnit * 8; // Skip the NAL unit payload for now
     while (more_data_in_byte_stream() && next_bits(24) != 0x000001 && next_bits(32) != 0x00000001) {
         f(8, trailing_zero_8bits);
     }
@@ -89,8 +90,7 @@ int main(int argc, char* argv[]) {
 
     // Process NAL units
     while ((ctx->bit_offset + 7) / 8 < ctx->size) {
-        size_t NumBytesInNalUnit = get_NumBytesInNALUnit();
-        byte_stream_nal_unit(NumBytesInNalUnit);
+        byte_stream_nal_unit();
     }
 
     freeContext(ctx);

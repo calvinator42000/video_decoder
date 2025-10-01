@@ -5,9 +5,18 @@ Context* ctx;
 size_t get_NumBytesInNALUnit() {
     size_t initial_offset = ctx->bit_offset;
     size_t num_bytes = 0;
-    while (!(next_bits(24) == 0x000001 || next_bits(24) == 0x000000)) {
-        num_bytes++;
-        ctx->bit_offset += 8;
+    while (1) {
+        if (ctx->bit_offset / 8 + 2 == ctx->size) {
+            num_bytes += 2;
+            ctx->bit_offset += 16;
+            break;
+        }
+        if (!(next_bits(24) == 0x000001 || next_bits(24) == 0x000000)) {
+            num_bytes++;
+            ctx->bit_offset += 8;
+        } else {
+            break;
+        }
     }
     ctx->bit_offset = initial_offset;
     return num_bytes;

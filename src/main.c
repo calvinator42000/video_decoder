@@ -23,8 +23,9 @@ size_t byte_stream_nal_unit() {
     f(24, start_code_prefix_one_3bytes);
     size_t NumBytesInNalUnit = get_NumBytesInNALUnit();
     printf("NAL Unit found at byte offset %zu, size: %zu bytes\n", ctx->bit_offset / 8, NumBytesInNalUnit);
+    size_t next_nal_start_offset = ctx->bit_offset + NumBytesInNalUnit * 8; // Saving this so parsing future nal units isn't reliant on the parsing of the previous one
     // nal_unit()
-    ctx->bit_offset += NumBytesInNalUnit * 8; // Skip the NAL unit payload for now
+    ctx->bit_offset = next_nal_start_offset;
     while (more_data_in_byte_stream() && next_bits(24) != 0x000001 && next_bits(32) != 0x00000001) {
         f(8, trailing_zero_8bits);
     }

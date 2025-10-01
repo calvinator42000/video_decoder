@@ -54,6 +54,10 @@ void f(size_t n, size_t val) {
     }
 }
 
+uint_t u(size_t n) {
+    return (uint_t)read_bits(n);
+}
+
 void freeContext() {
     if (ctx) {
         if (ctx->data) {

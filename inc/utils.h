@@ -21,6 +21,7 @@ size_t next_bits(size_t n);
 size_t read_bits(size_t n);
 uint8_t b();
 void f(size_t n, size_t val);
+uint_t u(size_t n);
 
 // B.2.2 - Rec. ITU-T H.266 (V3) (09/2023)
 #define leading_zero_8bits 0x00

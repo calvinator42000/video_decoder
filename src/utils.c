@@ -10,7 +10,7 @@ size_t readBytes(size_t index, size_t length) {
     }
     size_t value = 0;
     for (size_t i = 0; i < length; i++) {
-        value = (value << 8) | ctx->data[ctx->bit_offset / 8 + index + i];
+        value = (value << 8) | ctx->data[index + i];
     }
     return value;
 }
@@ -26,11 +26,11 @@ size_t next_bits(size_t n) {
     }
     // Read all bytes that are fully covered by the bits to read
     size_t num_bytes = ((ctx->bit_offset % 8) + n + 7) / 8;
-    value = readBytes(0, num_bytes);
-    // Shift left to discard bits before the current bit_offset
-    value <<= (ctx->bit_offset % 8);
+    value = readBytes(ctx->bit_offset / 8, num_bytes);
     // Shift right to discard bits after the n bits we want
     value >>= (num_bytes * 8 - n - (ctx->bit_offset % 8));
+    // Mask to keep only n bits
+    value &= (1ULL << n) - 1;
     return value;
 }
 

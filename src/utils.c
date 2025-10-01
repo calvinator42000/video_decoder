@@ -40,6 +40,10 @@ size_t read_bits(size_t n) {
     return value;
 }
 
+uint8_t b() {
+    return (uint8_t)read_bits(8);
+}
+
 void f(size_t n, size_t val) {
     size_t initial_offset = ctx->bit_offset;
     size_t val_read = read_bits(n);

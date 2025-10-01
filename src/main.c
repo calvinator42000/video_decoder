@@ -13,7 +13,7 @@ size_t get_NumBytesInNALUnit() {
     return num_bytes;
 }
 
-byte_stream_nal_unit(size_t NumBytesInNalUnit) {
+size_t byte_stream_nal_unit(size_t NumBytesInNalUnit) {
     // B.2.1 Byte stream NAL unit syntax - Rec. ITU-T H.266 (V3) (09/2023)
     while(next_bits(24) != 0x000001 && next_bits(32) != 0x00000001) {
         f(8, leading_zero_8bits);
@@ -28,6 +28,7 @@ byte_stream_nal_unit(size_t NumBytesInNalUnit) {
     while (more_data_in_byte_stream() && next_bits(24) != 0x000001 && next_bits(32) != 0x00000001) {
         f(8, trailing_zero_8bits);
     }
+    return NumBytesInNalUnit;
 }
 
 int main(int argc, char* argv[]) {
@@ -87,6 +88,7 @@ int main(int argc, char* argv[]) {
     fclose(fptr);
     ctx->bit_offset = 0;
 
+    // Process NAL units
     while ((ctx->bit_offset + 7) / 8 < ctx->size) {
         size_t NumBytesInNalUnit = get_NumBytesInNALUnit();
         byte_stream_nal_unit(NumBytesInNalUnit);

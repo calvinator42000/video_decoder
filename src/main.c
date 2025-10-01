@@ -14,7 +14,6 @@ size_t get_NumBytesInNALUnit() {
 }
 
 size_t byte_stream_nal_unit(size_t NumBytesInNalUnit) {
-    // B.2.1 Byte stream NAL unit syntax - Rec. ITU-T H.266 (V3) (09/2023)
     while(next_bits(24) != 0x000001 && next_bits(32) != 0x00000001) {
         f(8, leading_zero_8bits);
     }

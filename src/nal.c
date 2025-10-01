@@ -34,10 +34,7 @@ void printNALUnit(NAL_Unit* nal_unit) {
         printf("NAL Unit is NULL\n");
         return;
     }
-    printf("NAL Unit Header:\n");
-    printf("  nuh_layer_id: %u\n", nal_unit->nuh->nuh_layer_id);
-    printf("  nal_unit_type: %u\n", nal_unit->nuh->nal_unit_type);
-    printf("  nuh_temporal_id_plus1: %u\n", nal_unit->nuh->nuh_temporal_id_plus1);
+    printNUH(nal_unit->nuh);
     printf("RBSP Bytes (%zu bytes):\n", nal_unit->rbsp_byte ? nal_unit->NumBytesInRbsp : 0);
     if (nal_unit->rbsp_byte) {
         for (size_t i = 0; i < nal_unit->NumBytesInRbsp; i++) {

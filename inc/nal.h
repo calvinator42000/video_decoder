@@ -14,7 +14,6 @@ typedef struct {
 NAL_Unit* nal_unit(size_t NumBytesInNalUnit);
 
 void freeNALUnit(NAL_Unit* nal_unit);
-
 void printNALUnit(NAL_Unit* nal_unit);
 
 // 7.4.2.1 General NAL unit semantics - Rec. ITU-T H.266 (V3) (09/2023)

@@ -3,6 +3,9 @@
 
 #include <utils.h>
 
+#define forbidden_zero_bit 0
+#define nuh_reserved_zero_bit 0
+
 // 7.3.1.2 - NAL unit header syntax - Rec. ITU-T H.266 (V3) (09/2023)
 typedef struct {
     uint_t nuh_layer_id;

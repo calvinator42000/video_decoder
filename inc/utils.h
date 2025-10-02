@@ -32,4 +32,7 @@ uint_t u(size_t n);
 
 void freeContext();
 
+// 7.3.2.16 RBSP trailing bits syntax - Rec. ITU-T H.266 (V3) (09/2023)
+void rbsp_trailing_bits();
+
 #endif // UTILS_H

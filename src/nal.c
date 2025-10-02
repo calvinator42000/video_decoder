@@ -48,10 +48,3 @@ void printNALUnit(NAL_Unit* nal_unit) {
         }
     }
 }
-
-void rbsp_trailing_bits() {
-    f(1, 1); // rbsp_stop_one_bit
-    while (!byte_aligned()) {
-        f(1, 0); // rbsp_alignment_zero_bit
-    }
-}

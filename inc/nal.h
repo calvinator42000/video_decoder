@@ -5,7 +5,7 @@
 #include <nuh.h>
 #include <aud.h>
 
-// 7.4.2.2 - NAL unit header semantics - Rec. ITU-T H.266 (V3) (09/2023)
+// 7.4.2.2 NAL unit header semantics - Rec. ITU-T H.266 (V3) (09/2023)
 enum nal_unit_type {
     TRAIL_NUT = 0,
     STSA_NUT = 1,

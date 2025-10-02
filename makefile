@@ -6,7 +6,7 @@ LDFLAGS :=
 src := $(wildcard src/*.c)
 inc := $(wildcard inc/*.h)
 obj := $(patsubst src/%.c,obj/%.o,$(src))
-out := h266_decoder
+out := vvc_decoder
 
 $(out): $(obj)
 	$(CC) $^ -o $@

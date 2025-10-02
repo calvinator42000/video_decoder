@@ -5,28 +5,29 @@ extern Context* ctx;
 NAL_Unit* nal_unit(size_t NumBytesInNalUnit) {
     NAL_Unit* nal = malloc(sizeof(NAL_Unit));
     nal->nuh = nal_unit_header();
-    nal->NumBytesInRbsp = 0;
-    nal->rbsp_byte = malloc(sizeof(uint8_t) * NumBytesInNalUnit - 2);
+    size_t NumBytesInRbsp = 0;
+    uint8_t* rbsp_byte = malloc(sizeof(uint8_t) * NumBytesInNalUnit - 2);
     for (size_t i = 2; i < NumBytesInNalUnit; i++) {
         if (i + 2 < NumBytesInNalUnit && next_bits(24) == 0x000003) {
-            nal->rbsp_byte[nal->NumBytesInRbsp++] = b();
-            nal->rbsp_byte[nal->NumBytesInRbsp++] = b();
+            rbsp_byte[NumBytesInRbsp++] = b();
+            rbsp_byte[NumBytesInRbsp++] = b();
             i += 2;
             f(8, emulation_prevention_three_byte);
         } else {
-            nal->rbsp_byte[nal->NumBytesInRbsp++] = b();
+            rbsp_byte[NumBytesInRbsp++] = b();
         }
     }
-    nal->rbsp_byte = realloc(nal->rbsp_byte, sizeof(uint8_t) * nal->NumBytesInRbsp);
+    rbsp_byte = realloc(rbsp_byte, sizeof(uint8_t) * NumBytesInRbsp);
 
-    // Save current context and switch to RBSP context
-    Context* saved_ctx = ctx;
-    Context* nal_ctx;
-    nal_ctx = malloc(sizeof(Context));
-    nal_ctx->data = nal->rbsp_byte;
-    nal_ctx->size = nal->NumBytesInRbsp;
-    nal_ctx->bit_offset = 0;
-    ctx = nal_ctx;
+    // Save current buffer and switch to RBSP buffer
+    if (ctx->rbsp) {
+        freeDataBuffer(ctx->rbsp); // Free buffer just to be sure
+    }
+    ctx->rbsp = malloc(sizeof(Data_Buffer));
+    ctx->rbsp->data = rbsp_byte;
+    ctx->rbsp->size = NumBytesInRbsp;
+    ctx->rbsp->bit_offset = 0;
+    ctx->mode = RBSP_MODE;
 
     switch (nal->nuh->nal_unit_type) {
         case AUD_NUT:
@@ -39,10 +40,8 @@ NAL_Unit* nal_unit(size_t NumBytesInNalUnit) {
             break;
     }
 
-    // Restore original context
-    ctx->data = NULL;
-    free(ctx);
-    ctx = saved_ctx;
+    // Restore original buffer
+    ctx->mode = BYTE_STREAM_MODE;
 
     return nal;
 }
@@ -50,9 +49,6 @@ NAL_Unit* nal_unit(size_t NumBytesInNalUnit) {
 void freeNALUnit(NAL_Unit* nal_unit) {
     if (nal_unit) {
         freeNUH(nal_unit->nuh);
-        if (nal_unit->rbsp_byte) {
-            free(nal_unit->rbsp_byte);
-        }
         switch (nal_unit->nuh->nal_unit_type) {
             case AUD_NUT:
                 freeAUD(nal_unit->payload.aud);
@@ -73,15 +69,15 @@ void printNALUnit(NAL_Unit* nal_unit) {
         return;
     }
     printNUH(nal_unit->nuh);
-    printf("RBSP Bytes (%zu bytes):\n", nal_unit->rbsp_byte ? nal_unit->NumBytesInRbsp : 0);
-    if (nal_unit->rbsp_byte) {
-        for (size_t i = 0; i < nal_unit->NumBytesInRbsp; i++) {
-            printf("%02X ", nal_unit->rbsp_byte[i]);
+    printf("RBSP Bytes (%zu bytes):\n", ctx->rbsp->data ? ctx->rbsp->size : 0);
+    if (ctx->rbsp->data) {
+        for (size_t i = 0; i < ctx->rbsp->size; i++) {
+            printf("%02X ", ctx->rbsp->data[i]);
             if ((i + 1) % 16 == 0) {
                 printf("\n");
             }
         }
-        if (nal_unit->NumBytesInRbsp % 16 != 0) {
+        if (ctx->rbsp->size % 16 != 0) {
             printf("\n");
         }
     }

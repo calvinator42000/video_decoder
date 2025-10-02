@@ -48,8 +48,6 @@ enum nal_unit_type {
 // 7.3.1.1 General NAL unit syntax - Rec. ITU-T H.266 (V3) (09/2023)
 typedef struct {
     NAL_Unit_Header* nuh;
-    uint8_t* rbsp_byte;
-    size_t NumBytesInRbsp;
     union {
         Access_Unit_Delimiter* aud;
         Sequence_Parameter_Set* sps;

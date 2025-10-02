@@ -21,6 +21,17 @@ typedef struct {
     uint8_t* data;
     size_t bit_offset;
     size_t size;
+} Data_Buffer;
+
+typedef enum {
+    BYTE_STREAM_MODE,
+    RBSP_MODE
+} BufferMode;
+
+typedef struct {
+    BufferMode mode;
+    Data_Buffer* byte_stream;
+    Data_Buffer* rbsp;
 } Context;
 
 size_t readBytes(size_t index, size_t length);
@@ -34,9 +45,12 @@ uint8_t b();
 void f(size_t n, size_t val);
 uint_t u(size_t n);
 
+void freeDataBuffer(Data_Buffer* data_buffer);
 void freeContext();
 
 // 7.3.2.16 RBSP trailing bits syntax - Rec. ITU-T H.266 (V3) (09/2023)
 void rbsp_trailing_bits();
+
+Data_Buffer* getDataBuffer();
 
 #endif // UTILS_H

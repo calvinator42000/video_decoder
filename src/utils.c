@@ -52,7 +52,7 @@ void f(size_t n, size_t val) {
     size_t initial_offset = ctx->bit_offset;
     size_t val_read = read_bits(n);
     if (val_read != val) {
-        fprintf(stderr, "Expected %zu bits with value 0x%zX, but got 0x%zX at byte index %zu\n", n, val, val_read, initial_offset / 8);
+        fprintf(stderr, "Expected %zu bits with value 0x%zX, but got 0x%zX at byte index %zu (bit index %zu)\n", n, val, val_read, initial_offset / 8, initial_offset % 8);
         freeContext();
         exit(EXIT_FAILURE);
     }

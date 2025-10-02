@@ -22,6 +22,7 @@ typedef unsigned int uint_t;
 size_t readBytes(size_t index, size_t length);
 
 // 7.2 - Rec. ITU-T H.266 (V3) (09/2023)
+int byte_aligned();
 int more_data_in_byte_stream();
 size_t next_bits(size_t n);
 size_t read_bits(size_t n);

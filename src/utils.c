@@ -15,6 +15,10 @@ size_t readBytes(size_t index, size_t length) {
     return value;
 }
 
+int byte_aligned() {
+    return ctx->bit_offset % 8 == 0;
+}
+
 int more_data_in_byte_stream() {
     return ctx->bit_offset < ctx->size * 8;
 }

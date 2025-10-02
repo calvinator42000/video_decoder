@@ -55,7 +55,7 @@ NAL_Unit* nal_unit(size_t NumBytesInNalUnit);
 void freeNALUnit(NAL_Unit* nal_unit);
 void printNALUnit(NAL_Unit* nal_unit);
 
-// 7.4.2.1 General NAL unit semantics - Rec. ITU-T H.266 (V3) (09/2023)
-#define emulation_prevention_three_byte 0x03
+// 7.3.2.16 RBSP trailing bits syntax - Rec. ITU-T H.266 (V3) (09/2023)
+void rbsp_trailing_bits();
 
 #endif // NAL_H

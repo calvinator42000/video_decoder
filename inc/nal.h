@@ -4,6 +4,7 @@
 #include <utils.h>
 #include <nuh.h>
 #include <aud.h>
+#include <sps.h>
 
 // 7.4.2.2 NAL unit header semantics - Rec. ITU-T H.266 (V3) (09/2023)
 enum nal_unit_type {
@@ -51,6 +52,7 @@ typedef struct {
     size_t NumBytesInRbsp;
     union {
         Access_Unit_Delimiter* aud;
+        Sequence_Parameter_Set* sps;
     } payload;
 } NAL_Unit;
 

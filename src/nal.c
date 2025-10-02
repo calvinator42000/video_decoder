@@ -32,6 +32,9 @@ NAL_Unit* nal_unit(size_t NumBytesInNalUnit) {
         case AUD_NUT:
             nal->payload.aud = access_unit_delimiter_rbsp();
             break;
+        case SPS_NUT:
+            nal->payload.sps = seq_parameter_set_rbsp();
+            break;
         default:
             break;
     }
@@ -53,6 +56,9 @@ void freeNALUnit(NAL_Unit* nal_unit) {
         switch (nal_unit->nuh->nal_unit_type) {
             case AUD_NUT:
                 freeAUD(nal_unit->payload.aud);
+                break;
+            case SPS_NUT:
+                freeSPS(nal_unit->payload.sps);
                 break;
             default:
                 break;
@@ -82,6 +88,9 @@ void printNALUnit(NAL_Unit* nal_unit) {
     switch (nal_unit->nuh->nal_unit_type) {
         case AUD_NUT:
             printAUD(nal_unit->payload.aud);
+            break;
+        case SPS_NUT:
+            printSPS(nal_unit->payload.sps);
             break;
         default:
             break;

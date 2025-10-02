@@ -3,6 +3,7 @@
 
 #include <utils.h>
 #include <nuh.h>
+#include <aud.h>
 
 // 7.4.2.2 - NAL unit header semantics - Rec. ITU-T H.266 (V3) (09/2023)
 enum nal_unit_type {
@@ -48,6 +49,9 @@ typedef struct {
     NAL_Unit_Header* nuh;
     uint8_t* rbsp_byte;
     size_t NumBytesInRbsp;
+    union {
+        Access_Unit_Delimiter* aud;
+    } payload;
 } NAL_Unit;
 
 NAL_Unit* nal_unit(size_t NumBytesInNalUnit);

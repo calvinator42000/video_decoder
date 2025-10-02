@@ -28,6 +28,14 @@ NAL_Unit* nal_unit(size_t NumBytesInNalUnit) {
     nal_ctx->bit_offset = 0;
     ctx = nal_ctx;
 
+    switch (nal->nuh->nal_unit_type) {
+        case AUD_NUT:
+            nal->payload.aud = access_unit_delimiter_rbsp();
+            break;
+        default:
+            break;
+    }
+
     // Restore original context
     ctx->data = NULL;
     free(ctx);
@@ -41,6 +49,13 @@ void freeNALUnit(NAL_Unit* nal_unit) {
         freeNUH(nal_unit->nuh);
         if (nal_unit->rbsp_byte) {
             free(nal_unit->rbsp_byte);
+        }
+        switch (nal_unit->nuh->nal_unit_type) {
+            case AUD_NUT:
+                freeAUD(nal_unit->payload.aud);
+                break;
+            default:
+                break;
         }
         free(nal_unit);
     }
@@ -63,5 +78,12 @@ void printNALUnit(NAL_Unit* nal_unit) {
         if (nal_unit->NumBytesInRbsp % 16 != 0) {
             printf("\n");
         }
+    }
+    switch (nal_unit->nuh->nal_unit_type) {
+        case AUD_NUT:
+            printAUD(nal_unit->payload.aud);
+            break;
+        default:
+            break;
     }
 }

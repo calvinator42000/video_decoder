@@ -40,6 +40,9 @@ enum nal_unit_type {
     UNSPEC_31 = 31
 };
 
+// 7.4.2.1 General NAL unit semantics - Rec. ITU-T H.266 (V3) (09/2023)
+#define emulation_prevention_three_byte 0x03
+
 // 7.3.1.1 General NAL unit syntax - Rec. ITU-T H.266 (V3) (09/2023)
 typedef struct {
     NAL_Unit_Header* nuh;

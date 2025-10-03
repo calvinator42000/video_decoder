@@ -48,7 +48,6 @@ NAL_Unit* nal_unit(size_t NumBytesInNalUnit) {
 
 void freeNALUnit(NAL_Unit* nal_unit) {
     if (nal_unit) {
-        freeNUH(nal_unit->nuh);
         switch (nal_unit->nuh->nal_unit_type) {
             case AUD_NUT:
                 freeAUD(nal_unit->payload.aud);
@@ -59,6 +58,7 @@ void freeNALUnit(NAL_Unit* nal_unit) {
             default:
                 break;
         }
+        freeNUH(nal_unit->nuh);
         free(nal_unit);
     }
 }

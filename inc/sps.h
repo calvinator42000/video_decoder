@@ -2,6 +2,7 @@
 #define SPS_H
 
 #include <utils.h>
+#include <ptl.h>
 
 // 7.3.2.4 Sequence parameter set RBSP syntax - Rec. ITU-T H.266 (V3) (09/2023)
 typedef struct {
@@ -11,7 +12,7 @@ typedef struct {
     uint_t sps_chroma_format_idc;
     uint_t sps_log2_ctu_size_minus5;
     uint_t sps_ptl_dpb_hrd_params_present_flag;
-    // profile_tier_level
+    Profile_Tier_Level* ptl;
     uint_t sps_gdr_enabled_flag;
     uint_t sps_ref_pic_resampling_enabled_flag;
     uint_t sps_res_change_in_clvs_allowed_flag;

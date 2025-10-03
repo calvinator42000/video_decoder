@@ -10,7 +10,7 @@ Sequence_Parameter_Set* seq_parameter_set_rbsp() {
     sps->sps_log2_ctu_size_minus5 = u(2);
     sps->sps_ptl_dpb_hrd_params_present_flag = u(1);
     if (sps->sps_ptl_dpb_hrd_params_present_flag) {
-        // profile_tier_level
+        sps->ptl = profile_tier_level(1, sps->sps_max_sublayers_minus1);
     }
 
     return sps;
@@ -18,6 +18,9 @@ Sequence_Parameter_Set* seq_parameter_set_rbsp() {
 
 void freeSPS(Sequence_Parameter_Set* sps) {
     if (sps) {
+        if (sps->ptl) {
+            freePTL(sps->ptl);
+        }
         free(sps);
     }
 }
@@ -34,4 +37,5 @@ void printSPS(Sequence_Parameter_Set* sps) {
     printf("  sps_chroma_format_idc: %u\n", sps->sps_chroma_format_idc);
     printf("  sps_log2_ctu_size_minus5: %u\n", sps->sps_log2_ctu_size_minus5);
     printf("  sps_ptl_dpb_hrd_params_present_flag: %u\n", sps->sps_ptl_dpb_hrd_params_present_flag);
+    printPTL(sps->ptl);
 }

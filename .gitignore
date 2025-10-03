@@ -1,3 +1,4 @@
 obj/*.o
 vvc_decoder
+vvc_decoder_debug
 .vscode/

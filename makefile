@@ -8,8 +8,13 @@ inc := $(wildcard inc/*.h)
 obj := $(patsubst src/%.c,obj/%.o,$(src))
 out := vvc_decoder
 
+all: $(out) $(out)_debug
+
 $(out): $(obj)
 	$(CC) $^ -o $@
+
+$(out)_debug: $(obj)
+	$(CC) -g $^ -o $@
 
 obj:
 	mkdir -p obj
@@ -18,4 +23,4 @@ obj/%.o: src/%.c inc/%.h | obj
 	$(CC) -c $(CPPFLAGS) $(CFLAGS) $< -o $@
 
 clean:
-	rm -f $(obj) $(out)
+	rm -f $(obj) $(out) $(out)_debug

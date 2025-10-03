@@ -28,4 +28,10 @@ void printSPS(Sequence_Parameter_Set* sps) {
         return;
     }
     printf("Sequence Parameter Set:\n");
+    printf("  sps_seq_parameter_set_id: %u\n", sps->sps_seq_parameter_set_id);
+    printf("  sps_video_parameter_set_id: %u\n", sps->sps_video_parameter_set_id);
+    printf("  sps_max_sublayers_minus1: %u\n", sps->sps_max_sublayers_minus1);
+    printf("  sps_chroma_format_idc: %u\n", sps->sps_chroma_format_idc);
+    printf("  sps_log2_ctu_size_minus5: %u\n", sps->sps_log2_ctu_size_minus5);
+    printf("  sps_ptl_dpb_hrd_params_present_flag: %u\n", sps->sps_ptl_dpb_hrd_params_present_flag);
 }

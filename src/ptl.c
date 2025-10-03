@@ -26,4 +26,9 @@ void printPTL(Profile_Tier_Level* ptl) {
         return;
     }
     printf("Profile Tier Level:\n");
+    printf("  general_profile_idc: %u\n", ptl->general_profile_idc);
+    printf("  general_tier_flag: %u\n", ptl->general_tier_flag);
+    printf("  general_level_idc: %u\n", ptl->general_level_idc);
+    printf("  ptl_frame_only_constraint_flag: %u\n", ptl->ptl_frame_only_constraint_flag);
+    printf("  ptl_multilayer_enabled_flag: %u\n", ptl->ptl_multilayer_enabled_flag);
 }

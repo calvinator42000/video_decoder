@@ -2,6 +2,7 @@
 #define PTL_H
 
 #include <utils.h>
+#include <gci.h>
 
 // 7.3.3.1 General profile, tier, and level status - Rec. ITU-T H.266 (V3) (09/2023)
 typedef struct {
@@ -10,7 +11,7 @@ typedef struct {
     uint_t general_level_idc;
     uint_t ptl_frame_only_constraint_flag;
     uint_t ptl_multilayer_enabled_flag;
-    // general_constraints_info
+    General_Constraints_Info* gci;
     uint_t* ptl_sublayer_level_present_flag;
     uint_t ptl_reserved_zero_bit;
     uint_t* sublayer_level_idc;

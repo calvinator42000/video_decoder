@@ -21,6 +21,7 @@ typedef struct {
 
 Profile_Tier_Level* profile_tier_level(uint_t profileTierPresentFlag, uint_t MaxNumSubLayerMinus1);
 
+Profile_Tier_Level* initPTL();
 void freePTL(Profile_Tier_Level* ptl);
 void printPTL(Profile_Tier_Level* ptl);
 

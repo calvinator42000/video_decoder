@@ -1,7 +1,7 @@
 #include <ptl.h>
 
 Profile_Tier_Level* profile_tier_level(uint_t profileTierPresentFlag, uint_t MaxNumSubLayerMinus1) {
-    Profile_Tier_Level* ptl = malloc(sizeof(Profile_Tier_Level));
+    Profile_Tier_Level* ptl = initPTL();
 
     if (profileTierPresentFlag) {
         ptl->general_profile_idc = u(7);
@@ -11,7 +11,19 @@ Profile_Tier_Level* profile_tier_level(uint_t profileTierPresentFlag, uint_t Max
     ptl->ptl_frame_only_constraint_flag = u(1);
     ptl->ptl_multilayer_enabled_flag = u(1);
     ptl->gci = general_constraints_info();
+    // TODO: finish implementing this
 
+    return ptl;
+}
+
+Profile_Tier_Level* initPTL() {
+    Profile_Tier_Level* ptl = malloc(sizeof(Profile_Tier_Level));
+    if (ptl == NULL) {
+        printf("Memory allocation failed: Profile_Tier_Level\n");
+        freeContext();
+        exit(EXIT_FAILURE);
+    }
+    ptl->gci = NULL;
     return ptl;
 }
 

@@ -11,6 +11,7 @@ typedef struct {
 
 Access_Unit_Delimiter* access_unit_delimiter_rbsp();
 
+Access_Unit_Delimiter* initAUD();
 void freeAUD(Access_Unit_Delimiter* aud);
 void printAUD(Access_Unit_Delimiter* aud);
 

@@ -229,6 +229,6 @@ void printGCI(General_Constraints_Info* gci) {
             }
             printf("%u", gci->gci_reserved_bit[i]);
         }
-        printf("\n");
+        printf("}\n");
     }
 }

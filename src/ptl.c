@@ -17,6 +17,10 @@ Profile_Tier_Level* profile_tier_level(uint_t profileTierPresentFlag, uint_t Max
     if (profileTierPresentFlag) {
         ptl->gci = general_constraints_info();
     }
+    ptl->ptl_sublayer_level_present_flag = malloc(sizeof(uint_t) * MaxNumSubLayerMinus1);
+    for (int i = MaxNumSubLayerMinus1 - 1; i >= 0; i--) {
+        ptl->ptl_sublayer_level_present_flag[i] = u(1);
+    }
     // TODO: finish implementing this
 
     return ptl;
@@ -30,6 +34,7 @@ Profile_Tier_Level* initPTL() {
         exit(EXIT_FAILURE);
     }
     ptl->gci = NULL;
+    ptl->ptl_sublayer_level_present_flag = NULL;
     return ptl;
 }
 
@@ -37,6 +42,9 @@ void freePTL(Profile_Tier_Level* ptl) {
     if (ptl) {
         if (ptl->gci) {
             freeGCI(ptl->gci);
+        }
+        if (ptl->ptl_sublayer_level_present_flag) {
+            free(ptl->ptl_sublayer_level_present_flag);
         }
         free(ptl);
     }
@@ -58,4 +66,13 @@ void printPTL(Profile_Tier_Level* ptl) {
     if (ptl->profileTierPresentFlag) {
         printGCI(ptl->gci);
     }
+    printf("  ptl_sublayer_level_present_flag: {");
+    for (int i = ptl->MaxNumSubLayerMinus1 - 1; i >= 0; i--) {
+        ptl->ptl_sublayer_level_present_flag[i] = u(1);
+        if (i < ptl->MaxNumSubLayerMinus1 - 1) {
+            printf(",");
+        }
+        printf("%u", ptl->ptl_sublayer_level_present_flag[i]);
+    }
+    printf("}\n");
 }

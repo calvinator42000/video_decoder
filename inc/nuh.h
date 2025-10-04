@@ -16,6 +16,7 @@ typedef struct {
 
 NAL_Unit_Header* nal_unit_header();
 
+NAL_Unit_Header* initNUH();
 void freeNUH(NAL_Unit_Header* nuh);
 void printNUH(NAL_Unit_Header* nuh);
 

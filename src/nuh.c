@@ -2,12 +2,22 @@
 
 NAL_Unit_Header* nal_unit_header()
 {
-    NAL_Unit_Header* nuh = malloc(sizeof(NAL_Unit_Header));
+    NAL_Unit_Header* nuh = initNUH();
     f(1, forbidden_zero_bit);
     f(1, nuh_reserved_zero_bit);
     nuh->nuh_layer_id = u(6);
     nuh->nal_unit_type = u(5);
     nuh->nuh_temporal_id_plus1 = u(3);
+    return nuh;
+}
+
+NAL_Unit_Header* initNUH() {
+    NAL_Unit_Header* nuh = malloc(sizeof(NAL_Unit_Header));
+    if (nuh == NULL) {
+        printf("Memory allocation failed: NAL_Unit_Header\n");
+        freeContext();
+        exit(EXIT_FAILURE);
+    }
     return nuh;
 }
 

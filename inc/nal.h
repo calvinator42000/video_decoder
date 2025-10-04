@@ -56,7 +56,8 @@ typedef struct {
 
 NAL_Unit* nal_unit(size_t NumBytesInNalUnit);
 
-void freeNALUnit(NAL_Unit* nal_unit);
-void printNALUnit(NAL_Unit* nal_unit);
+NAL_Unit* initNAL();
+void freeNAL(NAL_Unit* nal);
+void printNAL(NAL_Unit* nal);
 
 #endif // NAL_H

@@ -3,7 +3,7 @@
 extern Context* ctx;
 
 NAL_Unit* nal_unit(size_t NumBytesInNalUnit) {
-    NAL_Unit* nal = malloc(sizeof(NAL_Unit));
+    NAL_Unit* nal = initNAL();
     nal->nuh = nal_unit_header();
     size_t NumBytesInRbsp = 0;
     uint8_t* rbsp_byte = malloc(sizeof(uint8_t) * NumBytesInNalUnit - 2);
@@ -46,29 +46,43 @@ NAL_Unit* nal_unit(size_t NumBytesInNalUnit) {
     return nal;
 }
 
-void freeNALUnit(NAL_Unit* nal_unit) {
-    if (nal_unit) {
-        switch (nal_unit->nuh->nal_unit_type) {
+NAL_Unit* initNAL() {
+    NAL_Unit* nal = malloc(sizeof(NAL_Unit));
+    if (nal == NULL) {
+        printf("Memory allocation failed: NAL_Unit\n");
+        freeContext();
+        exit(EXIT_FAILURE);
+    }
+    nal->nuh = NULL;
+    nal->payload.aud = NULL;
+    nal->payload.sps = NULL;
+    return nal;
+}
+
+void freeNAL(NAL_Unit* nal) {
+    if (nal) {
+        uint_t nut = nal->nuh->nal_unit_type;
+        freeNUH(nal->nuh);
+        switch (nut) {
             case AUD_NUT:
-                freeAUD(nal_unit->payload.aud);
+                freeAUD(nal->payload.aud);
                 break;
             case SPS_NUT:
-                freeSPS(nal_unit->payload.sps);
+                freeSPS(nal->payload.sps);
                 break;
             default:
                 break;
         }
-        freeNUH(nal_unit->nuh);
-        free(nal_unit);
+        free(nal);
     }
 }
 
-void printNALUnit(NAL_Unit* nal_unit) {
-    if (nal_unit == NULL) {
+void printNAL(NAL_Unit* nal) {
+    if (nal == NULL) {
         printf("NAL Unit is NULL\n");
         return;
     }
-    printNUH(nal_unit->nuh);
+    printNUH(nal->nuh);
     printf("RBSP Bytes (%zu bytes):\n", ctx->rbsp->data ? ctx->rbsp->size : 0);
     if (ctx->rbsp->data) {
         for (size_t i = 0; i < ctx->rbsp->size; i++) {
@@ -81,12 +95,12 @@ void printNALUnit(NAL_Unit* nal_unit) {
             printf("\n");
         }
     }
-    switch (nal_unit->nuh->nal_unit_type) {
+    switch (nal->nuh->nal_unit_type) {
         case AUD_NUT:
-            printAUD(nal_unit->payload.aud);
+            printAUD(nal->payload.aud);
             break;
         case SPS_NUT:
-            printSPS(nal_unit->payload.sps);
+            printSPS(nal->payload.sps);
             break;
         default:
             break;

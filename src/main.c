@@ -34,8 +34,8 @@ size_t byte_stream_nal_unit() {
     printf("NAL Unit found at byte offset %zu, size: %zu bytes\n", ctx->byte_stream->bit_offset / 8, NumBytesInNalUnit);
     size_t next_nal_start_offset = ctx->byte_stream->bit_offset + NumBytesInNalUnit * 8; // Saving this so parsing future nal units isn't reliant on the parsing of the previous one
     NAL_Unit* nal = nal_unit(NumBytesInNalUnit);
-    printNALUnit(nal);
-    freeNALUnit(nal);
+    printNAL(nal);
+    freeNAL(nal);
     ctx->byte_stream->bit_offset = next_nal_start_offset;
     while (more_data_in_byte_stream() && next_bits(24) != 0x000001 && next_bits(32) != 0x00000001) {
         f(8, trailing_zero_8bits);
@@ -87,27 +87,27 @@ int main(int argc, char* argv[]) {
 
     // Create and initialize data buffer
     ctx->byte_stream = malloc(sizeof(Data_Buffer));
-    if (ctx->byte_stream  == NULL) {
+    if (ctx->byte_stream == NULL) {
         printf("Memory allocation failed!\n");
         fclose(fptr);
         exit(EXIT_FAILURE);
     }
     ctx->byte_stream->data = malloc(sizeof(uint8_t) * filesize);
-    if (ctx->byte_stream ->data == NULL) {
+    if (ctx->byte_stream->data == NULL) {
         printf("Memory allocation failed!\n");
         freeContext();
         fclose(fptr);
         exit(EXIT_FAILURE);
     }
-    ctx->byte_stream->size = fread(ctx->byte_stream ->data, sizeof(uint8_t), filesize, fptr);
-    if (ctx->byte_stream ->size != filesize) {
+    ctx->byte_stream->size = fread(ctx->byte_stream->data, sizeof(uint8_t), filesize, fptr);
+    if (ctx->byte_stream->size != filesize) {
         printf("Error reading file!\n");
         freeContext();
         fclose(fptr);
         exit(EXIT_FAILURE);
     }
     fclose(fptr);
-    ctx->byte_stream ->bit_offset = 0;
+    ctx->byte_stream->bit_offset = 0;
     ctx->mode = BYTE_STREAM_MODE;
 
     // Process NAL units

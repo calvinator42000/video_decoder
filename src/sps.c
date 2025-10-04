@@ -1,7 +1,7 @@
 #include <sps.h>
 
 Sequence_Parameter_Set* seq_parameter_set_rbsp() {
-    Sequence_Parameter_Set* sps = malloc(sizeof(Sequence_Parameter_Set));
+    Sequence_Parameter_Set* sps = initSPS();
     sps->sps_seq_parameter_set_id = u(4);
     sps->sps_video_parameter_set_id = u(4);
     sps->sps_max_sublayers_minus1 = u(3);

@@ -47,5 +47,7 @@ void printSPS(Sequence_Parameter_Set* sps) {
     printf("  sps_chroma_format_idc: %u\n", sps->sps_chroma_format_idc);
     printf("  sps_log2_ctu_size_minus5: %u\n", sps->sps_log2_ctu_size_minus5);
     printf("  sps_ptl_dpb_hrd_params_present_flag: %u\n", sps->sps_ptl_dpb_hrd_params_present_flag);
-    printPTL(sps->ptl);
+    if (sps->sps_ptl_dpb_hrd_params_present_flag) {
+        printPTL(sps->ptl);
+    }
 }

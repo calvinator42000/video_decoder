@@ -2,7 +2,6 @@
 
 Profile_Tier_Level* profile_tier_level(uint_t profileTierPresentFlag, uint_t MaxNumSubLayerMinus1) {
     Profile_Tier_Level* ptl = initPTL();
-
     if (profileTierPresentFlag) {
         ptl->general_profile_idc = u(7);
         ptl->general_tier_flag = u(1);

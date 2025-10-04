@@ -96,6 +96,7 @@ typedef struct {
 
 General_Constraints_Info* general_constraints_info();
 
+General_Constraints_Info* initGCI();
 void freeGCI(General_Constraints_Info* gci);
 void printGCI(General_Constraints_Info* gci);
 

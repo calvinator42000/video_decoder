@@ -1,8 +1,7 @@
 #include <gci.h>
 
 General_Constraints_Info* general_constraints_info() {
-    General_Constraints_Info* gci = malloc(sizeof(General_Constraints_Info));
-
+    General_Constraints_Info* gci = initGCI();
     gci->gci_present_flag = u(1);
     if (gci->gci_present_flag) {
         /* general */
@@ -103,6 +102,17 @@ General_Constraints_Info* general_constraints_info() {
         f(1, gci_alignment_zero_bit);
     }
 
+    return gci;
+}
+
+General_Constraints_Info* initGCI() {
+    General_Constraints_Info* gci = malloc(sizeof(General_Constraints_Info));
+    if (gci == NULL) {
+        printf("Memory allocation failed: General_Constraints_Info\n");
+        freeContext();
+        exit(EXIT_FAILURE);
+    }
+    gci->gci_reserved_bit = NULL;
     return gci;
 }
 

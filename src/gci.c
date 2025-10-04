@@ -119,7 +119,6 @@ General_Constraints_Info* initGCI() {
 void freeGCI(General_Constraints_Info* gci) {
     if (gci) {
         if (gci->gci_reserved_bit) {
-            // this is not recognized as NULL. We need an init function for all structs.
             free(gci->gci_reserved_bit);
         }
         free(gci);

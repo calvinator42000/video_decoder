@@ -2,6 +2,11 @@
 
 Profile_Tier_Level* profile_tier_level(uint_t profileTierPresentFlag, uint_t MaxNumSubLayerMinus1) {
     Profile_Tier_Level* ptl = initPTL();
+
+    // Parameters
+    ptl->profileTierPresentFlag = profileTierPresentFlag;
+    ptl->MaxNumSubLayerMinus1 = MaxNumSubLayerMinus1;
+
     if (profileTierPresentFlag) {
         ptl->general_profile_idc = u(7);
         ptl->general_tier_flag = u(1);
@@ -9,7 +14,9 @@ Profile_Tier_Level* profile_tier_level(uint_t profileTierPresentFlag, uint_t Max
     ptl->general_level_idc = u(8);
     ptl->ptl_frame_only_constraint_flag = u(1);
     ptl->ptl_multilayer_enabled_flag = u(1);
-    ptl->gci = general_constraints_info();
+    if (profileTierPresentFlag) {
+        ptl->gci = general_constraints_info();
+    }
     // TODO: finish implementing this
 
     return ptl;
@@ -41,10 +48,14 @@ void printPTL(Profile_Tier_Level* ptl) {
         return;
     }
     printf("Profile Tier Level:\n");
-    printf("  general_profile_idc: %u\n", ptl->general_profile_idc);
-    printf("  general_tier_flag: %u\n", ptl->general_tier_flag);
+    if (ptl->profileTierPresentFlag) {
+        printf("  general_profile_idc: %u\n", ptl->general_profile_idc);
+        printf("  general_tier_flag: %u\n", ptl->general_tier_flag);
+    }
     printf("  general_level_idc: %u\n", ptl->general_level_idc);
     printf("  ptl_frame_only_constraint_flag: %u\n", ptl->ptl_frame_only_constraint_flag);
     printf("  ptl_multilayer_enabled_flag: %u\n", ptl->ptl_multilayer_enabled_flag);
-    printGCI(ptl->gci);
+    if (ptl->profileTierPresentFlag) {
+        printGCI(ptl->gci);
+    }
 }

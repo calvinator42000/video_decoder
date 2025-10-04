@@ -6,6 +6,10 @@
 
 // 7.3.3.1 General profile, tier, and level status - Rec. ITU-T H.266 (V3) (09/2023)
 typedef struct {
+    // Parameters
+    uint_t profileTierPresentFlag;
+    uint_t MaxNumSubLayerMinus1;
+
     uint_t general_profile_idc;
     uint_t general_tier_flag;
     uint_t general_level_idc;

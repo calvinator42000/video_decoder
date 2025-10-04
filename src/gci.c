@@ -2,6 +2,7 @@
 
 General_Constraints_Info* general_constraints_info() {
     General_Constraints_Info* gci = initGCI();
+
     gci->gci_present_flag = u(1);
     if (gci->gci_present_flag) {
         /* general */

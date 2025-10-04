@@ -3,6 +3,9 @@
 
 #include <utils.h>
 
+// 7.4.4.2 General constraints information semantics - Rec. ITU-T H.266 (V3) (09/2023)
+#define gci_alignment_zero_bit 0
+
 // 7.3.3.2 General constraints information syntax - Rec. ITU-T H.266 (V3) (09/2023)
 typedef struct {
     uint_t gci_present_flag;

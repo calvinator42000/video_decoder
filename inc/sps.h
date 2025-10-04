@@ -160,6 +160,7 @@ typedef struct {
 
 Sequence_Parameter_Set* seq_parameter_set_rbsp();
 
+Sequence_Parameter_Set* initSPS();
 void freeSPS(Sequence_Parameter_Set* sps);
 void printSPS(Sequence_Parameter_Set* sps);
 

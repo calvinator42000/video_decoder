@@ -2,7 +2,6 @@
 
 Sequence_Parameter_Set* seq_parameter_set_rbsp() {
     Sequence_Parameter_Set* sps = malloc(sizeof(Sequence_Parameter_Set));
-
     sps->sps_seq_parameter_set_id = u(4);
     sps->sps_video_parameter_set_id = u(4);
     sps->sps_max_sublayers_minus1 = u(3);
@@ -12,7 +11,18 @@ Sequence_Parameter_Set* seq_parameter_set_rbsp() {
     if (sps->sps_ptl_dpb_hrd_params_present_flag) {
         sps->ptl = profile_tier_level(1, sps->sps_max_sublayers_minus1);
     }
+    // TODO: finish implementing this
+    return sps;
+}
 
+Sequence_Parameter_Set* initSPS() {
+    Sequence_Parameter_Set* sps = malloc(sizeof(Sequence_Parameter_Set));
+    if (sps == NULL) {
+        printf("Memory allocation failed: Sequence_Parameter_Set\n");
+        freeContext();
+        exit(EXIT_FAILURE);
+    }
+    sps->ptl = NULL;
     return sps;
 }
 

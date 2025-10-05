@@ -68,6 +68,22 @@ uint_t u(size_t n) {
     return (uint_t)read_bits(n);
 }
 
+Data_Buffer* getDataBuffer() {
+    switch (ctx->mode) {
+        case BYTE_STREAM_MODE:
+            return ctx->byte_stream;
+        case RBSP_MODE:
+            return ctx->rbsp;
+        default:
+            fprintf(stderr, "Invalid BufferMode in getDataBuffer\n");
+            return NULL;
+    }
+}
+
+Context* getContext() {
+    return ctx;
+}
+
 void freeDataBuffer(Data_Buffer* data_buffer) {
     if (data_buffer) {
         if (data_buffer->data) {
@@ -93,17 +109,5 @@ void rbsp_trailing_bits() {
     f(1, rbsp_stop_one_bit);
     while (!byte_aligned()) {
         f(1, rbsp_alignment_zero_bit);
-    }
-}
-
-Data_Buffer* getDataBuffer() {
-    switch (ctx->mode) {
-        case BYTE_STREAM_MODE:
-            return ctx->byte_stream;
-        case RBSP_MODE:
-            return ctx->rbsp;
-        default:
-            fprintf(stderr, "Invalid BufferMode in getDataBuffer\n");
-            return NULL;
     }
 }

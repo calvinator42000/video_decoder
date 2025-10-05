@@ -1,7 +1,5 @@
 #include <nal.h>
 
-extern Context* ctx;
-
 NAL_Unit* nal_unit(size_t NumBytesInNalUnit) {
     NAL_Unit* nal = initNAL();
     nal->nuh = nal_unit_header();
@@ -19,6 +17,7 @@ NAL_Unit* nal_unit(size_t NumBytesInNalUnit) {
     }
     rbsp_byte = realloc(rbsp_byte, sizeof(uint8_t) * NumBytesInRbsp);
 
+    Context* ctx = getContext();
     // Save current buffer and switch to RBSP buffer
     if (ctx->rbsp) {
         freeDataBuffer(ctx->rbsp); // Free buffer just to be sure
@@ -83,6 +82,7 @@ void printNAL(NAL_Unit* nal) {
         return;
     }
     printNUH(nal->nuh);
+    Context* ctx = getContext();
     printf("RBSP Bytes (%zu bytes):\n", ctx->rbsp->data ? ctx->rbsp->size : 0);
     if (ctx->rbsp->data) {
         for (size_t i = 0; i < ctx->rbsp->size; i++) {

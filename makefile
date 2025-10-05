@@ -1,7 +1,7 @@
 CC := gcc
 CFLAGS := -Wall -I./inc
 CPPFLAGS := 
-LDFLAGS := 
+LDFLAGS := -lm
 
 src := $(wildcard src/*.c)
 inc := $(wildcard inc/*.h)
@@ -11,10 +11,10 @@ out := vvc_decoder
 all: $(out) $(out)_debug
 
 $(out): $(obj)
-	$(CC) $^ -o $@
+	$(CC) $^ -o $@ $(LDFLAGS)
 
 $(out)_debug: $(obj)
-	$(CC) -g $^ -o $@
+	$(CC) -g $^ -o $@ $(LDFLAGS)
 
 obj:
 	mkdir -p obj

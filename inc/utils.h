@@ -6,6 +6,7 @@
 #include <stdint.h>
 #include <stdarg.h>
 #include <string.h>
+#include <math.h>
 
 // B.2.2 - Rec. ITU-T H.266 (V3) (09/2023)
 #define leading_zero_8bits 0x00
@@ -47,9 +48,13 @@ size_t read_bits(size_t n);
 uint8_t b();
 void f(size_t n, size_t val);
 uint_t u(size_t n);
+uint_t ue();
 
 // 7.3.2.16 RBSP trailing bits syntax - Rec. ITU-T H.266 (V3) (09/2023)
 void rbsp_trailing_bits();
+
+// 9.2 Parsing process for k-th order Exp-Golomb codes
+uint_t expGolombCode(uint_t k);
 
 Data_Buffer* getDataBuffer();
 Context* getContext();

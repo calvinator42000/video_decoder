@@ -68,11 +68,24 @@ uint_t u(size_t n) {
     return (uint_t)read_bits(n);
 }
 
+uint_t ue() {
+    return expGolombCode(0);
+}
+
 void rbsp_trailing_bits() {
     f(1, rbsp_stop_one_bit);
     while (!byte_aligned()) {
         f(1, rbsp_alignment_zero_bit);
     }
+}
+
+uint_t expGolombCode(uint_t k) {
+    int leadingZeroBits = -1;
+    for (uint_t b = 0; !b; leadingZeroBits++) {
+        b = read_bits(1);
+    }
+    uint_t codeNum = (pow(2, leadingZeroBits) - 1) * pow(2, k) + read_bits(leadingZeroBits + k);
+    return codeNum;
 }
 
 Data_Buffer* getDataBuffer() {

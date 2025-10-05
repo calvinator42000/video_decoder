@@ -68,6 +68,13 @@ uint_t u(size_t n) {
     return (uint_t)read_bits(n);
 }
 
+void rbsp_trailing_bits() {
+    f(1, rbsp_stop_one_bit);
+    while (!byte_aligned()) {
+        f(1, rbsp_alignment_zero_bit);
+    }
+}
+
 Data_Buffer* getDataBuffer() {
     switch (ctx->mode) {
         case BYTE_STREAM_MODE:
@@ -105,9 +112,29 @@ void freeContext() {
     }
 }
 
-void rbsp_trailing_bits() {
-    f(1, rbsp_stop_one_bit);
-    while (!byte_aligned()) {
-        f(1, rbsp_alignment_zero_bit);
+void incIndent() {
+    if (strlen(ctx->print_indent) > 30) {
+        printf("ERROR: incIndent() called with indent length greater than allowed space: 30\n");
     }
+    char indent[] = "  ";
+    strcat(ctx->print_indent, indent);
+}
+
+void decIndent() {
+    if (strlen(ctx->print_indent) < 2) {
+        printf("ERROR: decIndent() called with indent length less than 2\n");
+    }
+    ctx->print_indent[strlen(ctx->print_indent)-2] = '\0';
+}
+
+void printIndent() {
+    printf(ctx->print_indent);
+}
+
+void printVar(char* fmt_str, ...) {
+    va_list args;
+    va_start(args, fmt_str);
+    printf(ctx->print_indent);
+    vprintf(fmt_str, args);
+    va_end(args);
 }

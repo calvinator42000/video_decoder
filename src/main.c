@@ -84,6 +84,7 @@ int main(int argc, char* argv[]) {
     }
     ctx->byte_stream = NULL;
     ctx->rbsp = NULL;
+    (ctx->print_indent)[0] = '\0';
 
     // Create and initialize data buffer
     ctx->byte_stream = malloc(sizeof(Data_Buffer));

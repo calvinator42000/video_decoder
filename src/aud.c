@@ -25,11 +25,13 @@ void freeAUD(Access_Unit_Delimiter* aud) {
 }
 
 void printAUD(Access_Unit_Delimiter* aud) {
+    incIndent();
     if (aud == NULL) {
-        printf("Access Unit Delimiter is NULL\n");
+        printVar("Access Unit Delimiter is NULL\n");
         return;
     }
-    printf("Access Unit Delimiter:\n");
-    printf("  aud_irap_or_gdr_flag: %u\n", aud->aud_irap_or_gdr_flag);
-    printf("  aud_pic_type: %u\n", aud->aud_pic_type);
+    printVar("Access Unit Delimiter:\n");
+    printVar("  aud_irap_or_gdr_flag: %u\n", aud->aud_irap_or_gdr_flag);
+    printVar("  aud_pic_type: %u\n", aud->aud_pic_type);
+    decIndent();
 }

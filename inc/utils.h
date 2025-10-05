@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdarg.h>
+#include <string.h>
 
 // B.2.2 - Rec. ITU-T H.266 (V3) (09/2023)
 #define leading_zero_8bits 0x00
@@ -32,6 +34,7 @@ typedef struct {
     BufferMode mode;
     Data_Buffer* byte_stream;
     Data_Buffer* rbsp;
+    char print_indent[30];
 } Context;
 
 size_t readBytes(size_t index, size_t length);
@@ -45,12 +48,17 @@ uint8_t b();
 void f(size_t n, size_t val);
 uint_t u(size_t n);
 
+// 7.3.2.16 RBSP trailing bits syntax - Rec. ITU-T H.266 (V3) (09/2023)
+void rbsp_trailing_bits();
+
 Data_Buffer* getDataBuffer();
 Context* getContext();
 void freeDataBuffer(Data_Buffer* data_buffer);
 void freeContext();
 
-// 7.3.2.16 RBSP trailing bits syntax - Rec. ITU-T H.266 (V3) (09/2023)
-void rbsp_trailing_bits();
+void incIndent();
+void decIndent();
+void printIndent();
+void printVar(char* fmt_str, ...);
 
 #endif // UTILS_H

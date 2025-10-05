@@ -36,18 +36,20 @@ void freeSPS(Sequence_Parameter_Set* sps) {
 }
 
 void printSPS(Sequence_Parameter_Set* sps) {
+    incIndent();
     if (sps == NULL) {
-        printf("Sequence Parameter Set is NULL\n");
+        printVar("Sequence Parameter Set is NULL\n");
         return;
     }
-    printf("Sequence Parameter Set:\n");
-    printf("  sps_seq_parameter_set_id: %u\n", sps->sps_seq_parameter_set_id);
-    printf("  sps_video_parameter_set_id: %u\n", sps->sps_video_parameter_set_id);
-    printf("  sps_max_sublayers_minus1: %u\n", sps->sps_max_sublayers_minus1);
-    printf("  sps_chroma_format_idc: %u\n", sps->sps_chroma_format_idc);
-    printf("  sps_log2_ctu_size_minus5: %u\n", sps->sps_log2_ctu_size_minus5);
-    printf("  sps_ptl_dpb_hrd_params_present_flag: %u\n", sps->sps_ptl_dpb_hrd_params_present_flag);
+    printVar("Sequence Parameter Set:\n");
+    printVar("  sps_seq_parameter_set_id: %u\n", sps->sps_seq_parameter_set_id);
+    printVar("  sps_video_parameter_set_id: %u\n", sps->sps_video_parameter_set_id);
+    printVar("  sps_max_sublayers_minus1: %u\n", sps->sps_max_sublayers_minus1);
+    printVar("  sps_chroma_format_idc: %u\n", sps->sps_chroma_format_idc);
+    printVar("  sps_log2_ctu_size_minus5: %u\n", sps->sps_log2_ctu_size_minus5);
+    printVar("  sps_ptl_dpb_hrd_params_present_flag: %u\n", sps->sps_ptl_dpb_hrd_params_present_flag);
     if (sps->sps_ptl_dpb_hrd_params_present_flag) {
         printPTL(sps->ptl);
     }
+    decIndent();
 }

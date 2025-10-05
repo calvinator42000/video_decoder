@@ -11,6 +11,11 @@ Sequence_Parameter_Set* seq_parameter_set_rbsp() {
     if (sps->sps_ptl_dpb_hrd_params_present_flag) {
         sps->ptl = profile_tier_level(1, sps->sps_max_sublayers_minus1);
     }
+    sps->sps_gdr_enabled_flag = u(1);
+    sps->sps_ref_pic_resampling_enabled_flag = u(1);
+    if (sps->sps_ref_pic_resampling_enabled_flag) {
+        sps->sps_res_change_in_clvs_allowed_flag = u(1);
+    }
     // TODO: finish implementing this
     return sps;
 }
@@ -50,6 +55,11 @@ void printSPS(Sequence_Parameter_Set* sps) {
     printVar("  sps_ptl_dpb_hrd_params_present_flag: %u\n", sps->sps_ptl_dpb_hrd_params_present_flag);
     if (sps->sps_ptl_dpb_hrd_params_present_flag) {
         printPTL(sps->ptl);
+    }
+    printVar("  sps_gdr_enabled_flag: %u\n", sps->sps_gdr_enabled_flag);
+    printVar("  sps_ref_pic_resampling_enabled_flag: %u\n", sps->sps_ref_pic_resampling_enabled_flag);
+    if (sps->sps_ref_pic_resampling_enabled_flag) {
+        print("  sps_res_change_in_clvs_allowed_flag: %u\n", sps->sps_res_change_in_clvs_allowed_flag);
     }
     decIndent();
 }

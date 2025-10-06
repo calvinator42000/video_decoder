@@ -47,6 +47,7 @@ size_t next_bits(size_t n);
 size_t read_bits(size_t n);
 uint8_t b();
 void f(size_t n, size_t val);
+int se();
 uint_t u(size_t n);
 uint_t ue();
 

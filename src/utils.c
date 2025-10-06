@@ -64,6 +64,11 @@ void f(size_t n, size_t val) {
     }
 }
 
+int se() {
+    uint_t codeNum = expGolombCode(0);
+    return (int)(pow(-1, codeNum+1) * ceil((double)codeNum / 2.0));
+}
+
 uint_t u(size_t n) {
     return (uint_t)read_bits(n);
 }

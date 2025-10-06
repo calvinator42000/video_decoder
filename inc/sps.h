@@ -6,6 +6,9 @@
 
 // 7.3.2.4 Sequence parameter set RBSP syntax - Rec. ITU-T H.266 (V3) (09/2023)
 typedef struct {
+    // Parameters
+    uint_t CtbSizeY;
+
     uint_t sps_seq_parameter_set_id;
     uint_t sps_video_parameter_set_id;
     uint_t sps_max_sublayers_minus1;

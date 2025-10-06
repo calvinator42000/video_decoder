@@ -3,6 +3,7 @@
 
 #include <utils.h>
 #include <ptl.h>
+#include <dpb.h>
 
 // 7.3.2.4 Sequence parameter set RBSP syntax - Rec. ITU-T H.266 (V3) (09/2023)
 typedef struct {
@@ -51,7 +52,7 @@ typedef struct {
     uint_t sps_num_extra_sh_bytes;
     uint_t* sps_extra_sh_bit_present_flag;
     uint_t sps_sublayer_dpb_params_flag;
-    // dpb_parameters
+    DPB_Parameters* dpb;
     uint_t sps_log2_min_luma_coding_block_size_minus2;
     uint_t sps_partition_constraints_override_enabled_flag;
     uint_t sps_log2_diff_min_qt_min_cb_intra_slice_luma;

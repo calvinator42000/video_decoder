@@ -102,7 +102,7 @@ Sequence_Parameter_Set* seq_parameter_set_rbsp() {
         if (sps->sps_max_sublayers_minus1 > 0) {
             sps->sps_sublayer_dpb_params_flag = u(1);
         }
-        // dpb
+        sps->dpb = dpb_parameters(sps->sps_max_sublayers_minus1, sps->sps_sublayer_dpb_params_flag);
     }
     // TODO: finish implementing this
     return sps;
@@ -125,6 +125,7 @@ Sequence_Parameter_Set* initSPS() {
     sps->sps_subpic_id = NULL;
     sps->sps_extra_ph_bit_present_flag = NULL;
     sps->sps_extra_sh_bit_present_flag = NULL;
+    sps->dpb = NULL;
     return sps;
 }
 
@@ -159,6 +160,9 @@ void freeSPS(Sequence_Parameter_Set* sps) {
         }
         if (sps->sps_extra_sh_bit_present_flag) {
             free(sps->sps_extra_sh_bit_present_flag);
+        }
+        if (sps->dpb) {
+            freeDPB(sps->dpb);
         }
         free(sps);
     }
@@ -267,7 +271,7 @@ void printSPS(Sequence_Parameter_Set* sps) {
         if (sps->sps_max_sublayers_minus1 > 0) {
             printVar("  sps_sublayer_dpb_params_flag: %u\n", sps->sps_sublayer_dpb_params_flag);
         }
-        // dpb
+        printDPB(sps->dpb);
     }
     decIndent();
 }

@@ -22,6 +22,8 @@ Reference_Picture_List_Structure* ref_pic_list_struct(uint_t listIdx, uint_t rpl
     for (int i = 0; i < rpls->num_ref_entries; i++) {
         if (sps->sps_inter_layer_prediction_enabled_flag) {
             rpls->inter_layer_ref_pic_flag[i] = u(1);
+        } else {
+            rpls->inter_layer_ref_pic_flag[i] = 0;
         }
         if (!rpls->inter_layer_ref_pic_flag[i]) {
             if (sps->sps_long_term_ref_pics_flag) {
@@ -38,12 +40,17 @@ Reference_Picture_List_Structure* ref_pic_list_struct(uint_t listIdx, uint_t rpl
                 }
                 if (rpls->AbsDeltaPocSt[i] > 0) {
                     rpls->strp_entry_sign_flag[i] = u(1);
+                } else {
+                    rpls->strp_entry_sign_flag[i] = 0;
                 }
             } else if (!rpls->ltrp_in_header_flag) {
                 rpls->rpls_poc_lsb_lt[j++] = u(sps->sps_log2_max_pic_order_cnt_lsb_minus4 + 4);
+            } else {
+                rpls->strp_entry_sign_flag[i] = 0;
             }
         } else {
             rpls->ilrp_idx[i] = ue();
+            rpls->strp_entry_sign_flag[i] = 0;
         }
     }
     return rpls;
@@ -96,30 +103,72 @@ void printRPLS(Reference_Picture_List_Structure* rpls) {
     }
     printVar("Reference Picture List Structure:\n");
     printVar("  num_ref_entries: %u\n", rpls->num_ref_entries);
-    if (rpls->sps->sps_long_term_ref_pics_flag && rpls->rplsIdx < rpls->sps->sps_num_ref_pic_lists[rpls->listIdx] && rpls->num_ref_entries > 0) {
+    if (rpls->sps->sps_long_term_ref_pics_flag && ((rpls->rplsIdx < rpls->sps->sps_num_ref_pic_lists[rpls->listIdx] && rpls->num_ref_entries > 0) || (rpls->rplsIdx == rpls->sps->sps_num_ref_pic_lists[rpls->listIdx]))) {
         printVar("  ltrp_in_header_flag: %u\n", rpls->ltrp_in_header_flag);
     }
-    int j = 0;
+    printVar("  inter_layer_ref_pic_flag: {");
     for (int i = 0; i < rpls->num_ref_entries; i++) {
-        if (rpls->sps->sps_inter_layer_prediction_enabled_flag) {
-            printVar("  inter_layer_ref_pic_flag[%u]: %u\n", i, rpls->inter_layer_ref_pic_flag[i]);
+        if (i > 0) {
+            printf(",");
+        }
+        printf("%u", rpls->inter_layer_ref_pic_flag[i]);
+    }
+    printf("}\n");
+    printVar("  st_ref_pic_flag: {");
+    for (int i = 0; i < rpls->num_ref_entries; i++) {
+        if (i > 0) {
+            printf(",");
         }
         if (!rpls->inter_layer_ref_pic_flag[i]) {
-            if (rpls->sps->sps_long_term_ref_pics_flag) {
-                printVar("  st_ref_pic_flag[%u]: %u\n", i, rpls->st_ref_pic_flag[i]);
-            }
-            if (rpls->st_ref_pic_flag[i]) {
-                printVar("  abs_delta_poc_st[%u]: %u\n", i, rpls->abs_delta_poc_st[i]);
-                if (rpls->AbsDeltaPocSt[i] > 0) {
-                    printVar("  strp_entry_sign_flag[%u]: %u\n", i, rpls->strp_entry_sign_flag[i]);
-                }
-            } else if (!rpls->ltrp_in_header_flag) {
-                printVar("  rpls_poc_lsb_lt[%u]: %u\n", j, rpls->rpls_poc_lsb_lt[j]);
-                j++;
-            }
+            printf("%u", rpls->st_ref_pic_flag[i]);
         } else {
-            printVar("  ilrp_idx[%u]: %u\n", i, rpls->ilrp_idx[i]);
+            printf("x");
         }
     }
+    printf("}\n");
+    printVar("  abs_delta_poc_st: {");
+    for (int i = 0; i < rpls->num_ref_entries; i++) {
+        if (i > 0) {
+            printf(",");
+        }
+        if (!rpls->inter_layer_ref_pic_flag[i] && rpls->st_ref_pic_flag[i]) {
+            printf("%u", rpls->abs_delta_poc_st[i]);
+        } else {
+            printf("x");
+        }
+    }
+    printf("}\n");
+    printVar("  rpls_poc_lsb_lt: {");
+    int j = 0;
+    for (int i = 0; i < rpls->num_ref_entries; i++) {
+        if (i > 0) {
+            printf(",");
+        }
+        if (!rpls->inter_layer_ref_pic_flag[i] && !rpls->st_ref_pic_flag[i] && !rpls->ltrp_in_header_flag) {
+            printf("%u", rpls->rpls_poc_lsb_lt[j]);
+            j++;
+        }
+    }
+    printf("}\n");
+    printVar("  ilrp_idx: {");
+    for (int i = 0; i < rpls->num_ref_entries; i++) {
+        if (i > 0) {
+            printf(",");
+        }
+        if (rpls->inter_layer_ref_pic_flag[i]) {
+            printf("%u", rpls->ilrp_idx[i]);
+        } else {
+            printf("x");
+        }
+    }
+    printf("}\n");
+    printVar("  strp_entry_sign_flag: {");
+    for (int i = 0; i < rpls->num_ref_entries; i++) {
+        if (i > 0) {
+            printf(",");
+        }
+        printf("%u", rpls->strp_entry_sign_flag[i]);
+    }
+    printf("}\n");
     decIndent();
 }

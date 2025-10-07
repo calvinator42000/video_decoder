@@ -24,10 +24,13 @@ Profile_Tier_Level* profile_tier_level(uint_t profileTierPresentFlag, uint_t Max
     while (!byte_aligned()) {
         f(1, ptl_reserved_zero_bit);
     }
-    ptl->sublayer_level_idc = malloc(sizeof(uint_t) * MaxNumSubLayerMinus1);
+    ptl->sublayer_level_idc = malloc(sizeof(uint_t) * MaxNumSubLayerMinus1+1);
+    ptl->sublayer_level_idc[MaxNumSubLayerMinus1] = ptl->general_level_idc;
     for (int i = MaxNumSubLayerMinus1 - 1; i >= 0; i--) {
         if (ptl->ptl_sublayer_level_present_flag[i]) {
             ptl->sublayer_level_idc[i] = u(8);
+        } else {
+            ptl->sublayer_level_idc[i] = ptl->sublayer_level_idc[i+1];
         }
     }
     if (profileTierPresentFlag) {
@@ -99,13 +102,11 @@ void printPTL(Profile_Tier_Level* ptl) {
     }
     printf("}\n");
     printVar("  sublayer_level_idc: {");
-    for (int i = ptl->MaxNumSubLayerMinus1 - 1; i >= 0; i--) {
-        if (ptl->ptl_sublayer_level_present_flag[i]) {
-            if (i < ptl->MaxNumSubLayerMinus1 - 1) {
-                printf(",");
-            }
-            printf("%u", ptl->sublayer_level_idc[i]);
+    for (int i = ptl->MaxNumSubLayerMinus1; i >= 0; i--) {
+        if (i < ptl->MaxNumSubLayerMinus1) {
+            printf(",");
         }
+        printf("%u", ptl->sublayer_level_idc[i]);
     }
     printf("}\n");
     if (ptl->profileTierPresentFlag) {

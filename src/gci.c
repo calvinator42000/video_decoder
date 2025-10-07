@@ -24,7 +24,7 @@ General_Constraints_Info* general_constraints_info() {
         gci->gci_no_aps_constraint_flag = u(1);
         gci->gci_no_idr_rpl_constraint_flag = u(1);
         /* tile, slice, subpicture partitioning */
-        gci->gci_one_tile_per_pic_constraint_flag = u(1);
+        gci->gci_one_tile_per_pic_constraint_flag = 0;
         gci->gci_pic_header_in_slice_header_constraint_flag = u(1);
         gci->gci_one_slice_per_pic_constraint_flag = u(1);
         gci->gci_no_rectangular_slice_constraint_flag = u(1);
@@ -80,7 +80,7 @@ General_Constraints_Info* general_constraints_info() {
         gci->gci_no_lmcs_constraint_flag = u(1);
         gci->gci_no_ladf_constraint_flag = u(1);
         gci->gci_no_virtual_boundaries_constraint_flag = u(1);
-        gci->gci_num_additional_bits =-u(8);
+        gci->gci_num_additional_bits = u(8);
         size_t numAdditionalBitsUsed;
         if (gci->gci_num_additional_bits > 5) {
             gci->gci_all_rap_pictures_constraint_flag = u(1);
@@ -91,12 +91,25 @@ General_Constraints_Info* general_constraints_info() {
             gci->gci_no_reverse_last_sig_coeff_constraint_flag = u(1);
             numAdditionalBitsUsed = 6;
         } else {
+            gci->gci_all_rap_pictures_constraint_flag = 0;
+            gci->gci_no_extended_precision_processing_constraint_flag = 0;
+            gci->gci_no_ts_residual_coding_rice_constraint_flag = 0;
+            gci->gci_no_rrc_rice_extension_constraint_flag = 0;
+            gci->gci_no_persistent_rice_adaptation_constraint_flag = 0;
+            gci->gci_no_reverse_last_sig_coeff_constraint_flag = 0;
             numAdditionalBitsUsed = 0;
         }
         gci->gci_reserved_bit = malloc(sizeof(uint_t) * (gci->gci_num_additional_bits - numAdditionalBitsUsed));
         for (size_t i = 0; i < gci->gci_num_additional_bits - numAdditionalBitsUsed; i++) {
             gci->gci_reserved_bit[i] = u(1);
         }
+    } else {
+        gci->gci_all_rap_pictures_constraint_flag = 0;
+        gci->gci_no_extended_precision_processing_constraint_flag = 0;
+        gci->gci_no_ts_residual_coding_rice_constraint_flag = 0;
+        gci->gci_no_rrc_rice_extension_constraint_flag = 0;
+        gci->gci_no_persistent_rice_adaptation_constraint_flag = 0;
+        gci->gci_no_reverse_last_sig_coeff_constraint_flag = 0;
     }
 
     while(!byte_aligned()) {

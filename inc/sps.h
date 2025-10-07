@@ -4,11 +4,15 @@
 #include <utils.h>
 #include <ptl.h>
 #include <dpb.h>
+#include <rpls.h>
+
+typedef struct Reference_Picture_List_Structure_struct Reference_Picture_List_Structure;
 
 // 7.3.2.4 Sequence parameter set RBSP syntax - Rec. ITU-T H.266 (V3) (09/2023)
-typedef struct {
+typedef struct Sequence_Parameter_Set_struct {
     // Parameters
     uint_t CtbSizeY;
+    uint_t numQpTables;
 
     uint_t sps_seq_parameter_set_id;
     uint_t sps_video_parameter_set_id;
@@ -78,7 +82,7 @@ typedef struct {
     uint_t sps_lfnst_enabled_flag;
     uint_t sps_joint_cbcr_enabled_flag;
     uint_t sps_same_qp_table_for_chroma_flag;
-    uint_t* sps_qp_table_start_minus26;
+    int* sps_qp_table_start_minus26;
     uint_t* sps_num_points_in_qp_table_minus1;
     uint_t** sps_delta_qp_in_val_minus1;
     uint_t** sps_delta_qp_diff_val;
@@ -93,7 +97,7 @@ typedef struct {
     uint_t sps_idr_rpl_present_flag;
     uint_t sps_rpl1_same_as_rpl0_flag;
     uint_t* sps_num_ref_pic_lists;
-    // ref_pic_list_struct
+    Reference_Picture_List_Structure*** rpls;
     uint_t sps_ref_wraparound_enabled_flag;
     uint_t sps_temporal_mvp_enabled_flag;
     uint_t sps_sbtmvp_enabled_flag;

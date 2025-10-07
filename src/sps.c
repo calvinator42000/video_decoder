@@ -104,6 +104,88 @@ Sequence_Parameter_Set* seq_parameter_set_rbsp() {
         }
         sps->dpb = dpb_parameters(sps->sps_max_sublayers_minus1, sps->sps_sublayer_dpb_params_flag);
     }
+    sps->sps_log2_min_luma_coding_block_size_minus2 = ue();
+    sps->sps_partition_constraints_override_enabled_flag = u(1);
+    sps->sps_log2_diff_min_qt_min_cb_intra_slice_luma = ue();
+    sps->sps_max_mtt_hierarchy_depth_intra_slice_luma = ue();
+    if (sps->sps_max_mtt_hierarchy_depth_intra_slice_luma != 0) {
+        sps->sps_log2_diff_max_bt_min_qt_intra_slice_luma = ue();
+        sps->sps_log2_diff_max_tt_min_qt_intra_slice_luma = ue();
+    }
+    if (sps->sps_chroma_format_idc != 0) {
+        sps->sps_qtbtt_dual_tree_intra_flag = u(1);
+    }
+    if (sps->sps_qtbtt_dual_tree_intra_flag) {
+        sps->sps_log2_diff_min_qt_min_cb_intra_slice_chroma = ue();
+        sps->sps_max_mtt_hierarchy_depth_intra_slice_chroma = ue();
+        if (sps->sps_max_mtt_hierarchy_depth_intra_slice_chroma != 0) {
+            sps->sps_log2_diff_max_bt_min_qt_intra_slice_chroma = ue();
+            sps->sps_log2_diff_max_tt_min_qt_intra_slice_chroma = ue();
+        }
+    }
+    sps->sps_log2_diff_min_qt_min_cb_inter_slice = ue();
+    sps->sps_max_mtt_hierarchy_depth_inter_slice = ue();
+    if (sps->sps_max_mtt_hierarchy_depth_inter_slice != 0) {
+        sps->sps_log2_diff_max_bt_min_qt_inter_slice = ue();
+        sps->sps_log2_diff_max_tt_min_qt_inter_slice = ue();
+    }
+    if (sps->CtbSizeY > 32) {
+        sps->sps_max_luma_transform_size_64_flag = u(1);
+    }
+    sps->sps_transform_skip_enabled_flag = u(1);
+    if (sps->sps_transform_skip_enabled_flag) {
+        sps->sps_log2_transform_skip_max_size_minus2 = ue();
+        sps->sps_bdpcm_enabled_flag = u(1);
+    }
+    sps->sps_mts_enabled_flag = u(1);
+    if (sps->sps_mts_enabled_flag) {
+        sps->sps_explicit_mts_intra_enabled_flag = u(1);
+        sps->sps_explicit_mts_inter_enabled_flag = u(1);
+    }
+    sps->sps_lfnst_enabled_flag = u(1);
+    if (sps->sps_chroma_format_idc != 0) {
+        sps->sps_joint_cbcr_enabled_flag = u(1);
+        sps->sps_same_qp_table_for_chroma_flag = u(1);
+        sps->numQpTables = sps->sps_same_qp_table_for_chroma_flag ? 1 : (sps->sps_joint_cbcr_enabled_flag ? 3 : 2);
+        sps->sps_qp_table_start_minus26 = malloc(sizeof(int) * sps->numQpTables);
+        sps->sps_num_points_in_qp_table_minus1 = malloc(sizeof(uint_t) * sps->numQpTables);
+        sps->sps_delta_qp_in_val_minus1 = malloc(sizeof(uint_t*) * sps->numQpTables);
+        sps->sps_delta_qp_diff_val = malloc(sizeof(uint_t*) * sps->numQpTables);
+        for (int i = 0; i < sps->numQpTables; i++) {
+            sps->sps_qp_table_start_minus26[i] = se();
+            sps->sps_num_points_in_qp_table_minus1[i] = ue();
+            sps->sps_delta_qp_in_val_minus1[i] = malloc(sizeof(uint_t) * (sps->sps_num_points_in_qp_table_minus1[i] + 1));
+            sps->sps_delta_qp_diff_val[i] = malloc(sizeof(uint_t) * (sps->sps_num_points_in_qp_table_minus1[i] + 1));
+            for (int j = 0; j <= sps->sps_num_points_in_qp_table_minus1[i]; j++) {
+                sps->sps_delta_qp_in_val_minus1[i][j] = ue();
+                sps->sps_delta_qp_diff_val[i][j] = ue();
+            }
+        }
+    }
+    sps->sps_sao_enabled_flag = u(1);
+    sps->sps_alf_enabled_flag = u(1);
+    if (sps->sps_alf_enabled_flag && sps->sps_chroma_format_idc != 0) {
+        sps->sps_ccalf_enabled_flag = u(1);
+    }
+    sps->sps_lmcs_enabled_flag = u(1);
+    sps->sps_weighted_pred_flag = u(1);
+    sps->sps_weighted_bipred_flag = u(1);
+    sps->sps_long_term_ref_pics_flag = u(1);
+    if (sps->sps_video_parameter_set_id > 0) {
+        sps->sps_inter_layer_prediction_enabled_flag = u(1);
+    }
+    sps->sps_idr_rpl_present_flag = u(1);
+    sps->sps_rpl1_same_as_rpl0_flag = u(1);
+    sps->sps_num_ref_pic_lists = malloc(sizeof(uint_t) * (sps->sps_rpl1_same_as_rpl0_flag ? 1 : 2));
+    // sps->rpls = malloc(sizeof(Reference_Picture_List_Structure**) * (sps->sps_rpl1_same_as_rpl0_flag ? 1 : 2));
+    for (int i = 0; i < (sps->sps_rpl1_same_as_rpl0_flag ? 1 : 2); i++) {
+        sps->sps_num_ref_pic_lists[i] = ue();
+        // sps->rpls[i] = malloc(sizeof(Reference_Picture_List_Structure*) * sps->sps_num_ref_pic_lists[i]);
+        for (int j = 0; j < sps->sps_num_ref_pic_lists[i]; j++) {
+            // sps->rpls[i][j] = ref_pic_list_struct(i, j, sps);
+            // printRPLS(sps->rpls[i][j]);
+        }
+    }
     // TODO: finish implementing this
     return sps;
 }
@@ -126,6 +208,12 @@ Sequence_Parameter_Set* initSPS() {
     sps->sps_extra_ph_bit_present_flag = NULL;
     sps->sps_extra_sh_bit_present_flag = NULL;
     sps->dpb = NULL;
+    sps->sps_qp_table_start_minus26 = NULL;
+    sps->sps_num_points_in_qp_table_minus1 = NULL;
+    sps->sps_delta_qp_in_val_minus1 = NULL;
+    sps->sps_delta_qp_diff_val = NULL;
+    sps->sps_num_ref_pic_lists = NULL;
+    sps->rpls = NULL;
     return sps;
 }
 
@@ -163,6 +251,44 @@ void freeSPS(Sequence_Parameter_Set* sps) {
         }
         if (sps->dpb) {
             freeDPB(sps->dpb);
+        }
+        if (sps->sps_qp_table_start_minus26) {
+            free(sps->sps_qp_table_start_minus26);
+        }
+        if (sps->sps_num_points_in_qp_table_minus1) {
+            if (sps->sps_delta_qp_in_val_minus1) {
+                for (int i = 0; i < sps->numQpTables; i++) {
+                    if (sps->sps_delta_qp_in_val_minus1[i]) {
+                        free(sps->sps_delta_qp_in_val_minus1[i]);
+                    }
+                }
+                free(sps->sps_delta_qp_in_val_minus1);
+            }
+            if (sps->sps_delta_qp_diff_val) {
+                for (int i = 0; i < sps->numQpTables; i++) {
+                    if (sps->sps_delta_qp_diff_val[i]) {
+                        free(sps->sps_delta_qp_diff_val[i]);
+                    }
+                }
+                free(sps->sps_delta_qp_diff_val);
+            }
+            free(sps->sps_num_points_in_qp_table_minus1);
+        }
+        if (sps->sps_num_ref_pic_lists) {
+            if (sps->rpls) {
+                for (int i = 0; i < (sps->sps_rpl1_same_as_rpl0_flag ? 1 : 2); i++) {
+                    if (sps->rpls[i]) {
+                        for (int j = 0; j < sps->sps_num_ref_pic_lists[i]; j++) {
+                            if (sps->rpls[i][j]) {
+                                freeRPLS(sps->rpls[i][j]);
+                            }
+                        }
+                        free(sps->rpls[i]);
+                    }
+                }
+                free(sps->rpls);
+            }
+            free(sps->sps_num_ref_pic_lists);
         }
         free(sps);
     }

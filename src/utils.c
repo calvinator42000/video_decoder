@@ -5,7 +5,7 @@ extern Context* ctx;
 size_t readBytes(size_t index, size_t length) {
     Data_Buffer* buffer = getDataBuffer();
     if (index + length > buffer->size) {
-        fprintf(stderr, "Index out of bounds in read_bytes: %zu + %zu\n", index, length);
+        fprintf(stderr, "ERROR: Index out of bounds in read_bytes: %zu + %zu, size: %zu\n", index, length, buffer->size);
         freeContext();
         exit(EXIT_FAILURE);
     }

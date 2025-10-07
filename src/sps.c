@@ -267,6 +267,158 @@ Sequence_Parameter_Set* seq_parameter_set_rbsp() {
             }
         }
     }
+    sps->sps_ref_wraparound_enabled_flag = u(1);
+    sps->sps_temporal_mvp_enabled_flag = u(1);
+    if (sps->sps_temporal_mvp_enabled_flag) {
+        sps->sps_sbtmvp_enabled_flag = u(1);
+    } else {
+        sps->sps_sbtmvp_enabled_flag = 0;
+    }
+    sps->sps_amvr_enabled_flag = u(1);
+    sps->sps_bdof_enabled_flag = u(1);
+    if (sps->sps_bdof_enabled_flag) {
+        sps->sps_bdof_control_present_in_ph_flag = u(1);
+    } else {
+        sps->sps_bdof_control_present_in_ph_flag = 0;
+    }
+    sps->sps_smvd_enabled_flag = u(1);
+    sps->sps_dmvr_enabled_flag = u(1);
+    if (sps->sps_dmvr_enabled_flag) {
+        sps->sps_dmvr_control_present_in_ph_flag = u(1);
+    } else {
+        sps->sps_dmvr_control_present_in_ph_flag = 0;
+    }
+    sps->sps_mmvd_enabled_flag = u(1);
+    if (sps->sps_mmvd_enabled_flag) {
+        sps->sps_mmvd_fullpel_only_enabled_flag = u(1);
+    } else {
+        sps->sps_mmvd_fullpel_only_enabled_flag = 0;
+    }
+    sps->sps_six_minus_max_num_merge_cand = ue();
+    sps->MaxNumMergeCand = 6 - sps->sps_six_minus_max_num_merge_cand;
+    sps->sps_sbt_enabled_flag = u(1);
+    sps->sps_affine_enabled_flag = u(1);
+    if (sps->sps_affine_enabled_flag) {
+        sps->sps_five_minus_max_num_subblock_merge_cand = ue();
+        sps->sps_6param_affine_enabled_flag = u(1);
+        if (sps->sps_amvr_enabled_flag) {
+            sps->sps_affine_amvr_enabled_flag = u(1);
+        } else {
+            sps->sps_affine_amvr_enabled_flag = 0;
+        }
+        sps->sps_affine_prof_enabled_flag = u(1);
+        if (sps->sps_affine_prof_enabled_flag) {
+            sps->sps_prof_control_present_in_ph_flag = u(1);
+        } else {
+            sps->sps_prof_control_present_in_ph_flag = 0;
+        }
+    } else {
+        sps->sps_6param_affine_enabled_flag = 0;
+        sps->sps_affine_amvr_enabled_flag = 0;
+        sps->sps_affine_prof_enabled_flag = 0;
+        sps->sps_prof_control_present_in_ph_flag = 0;
+    }
+    sps->sps_bcw_enabled_flag = u(1);
+    sps->sps_ciip_enabled_flag = u(1);
+    if (sps->MaxNumMergeCand >= 2) {
+        sps->sps_gpm_enabled_flag = u(1);
+        if (sps->sps_gpm_enabled_flag && sps->MaxNumMergeCand >= 3) {
+            sps->sps_max_num_merge_cand_minus_max_num_gpm_cand = ue();
+        }
+    } else {
+        sps->sps_gpm_enabled_flag = 0;
+    }
+    sps->sps_log2_parallel_merge_level_minus2 = ue();
+    sps->sps_isp_enabled_flag = u(1);
+    sps->sps_mrl_enabled_flag = u(1);
+    sps->sps_mip_enabled_flag = u(1);
+    if (sps->sps_chroma_format_idc != 0) {
+        sps->sps_cclm_enabled_flag = u(1);
+    } else {
+        sps->sps_cclm_enabled_flag = 0;
+    }
+    if (sps->sps_chroma_format_idc == 1) {
+        sps->sps_chroma_horizontal_collocated_flag = u(1);
+        sps->sps_chroma_vertical_collocated_flag = u(1);
+    } else {
+        sps->sps_chroma_horizontal_collocated_flag = 1;
+        sps->sps_chroma_vertical_collocated_flag = 1;
+    }
+    sps->sps_palette_enabled_flag = u(1);
+    if (sps->sps_chroma_format_idc == 3 && !sps->sps_max_luma_transform_size_64_flag) {
+        sps->sps_act_enabled_flag = u(1);
+    } else {
+        sps->sps_act_enabled_flag = 0;
+    }
+    if (sps->sps_transform_skip_enabled_flag || sps->sps_palette_enabled_flag) {
+        sps->sps_min_qp_prime_ts = ue();
+    }
+    sps->sps_ibc_enabled_flag = u(1);
+    if (sps->sps_ibc_enabled_flag) {
+        sps->sps_six_minus_max_num_ibc_merge_cand = ue();
+    }
+    sps->sps_ladf_enabled_flag = u(1);
+    if (sps->sps_ladf_enabled_flag) {
+        sps->sps_num_ladf_intervals_minus2 = u(2);
+        sps->sps_ladf_lowest_interval_qp_offset = se();
+        sps->sps_ladf_qp_offset = malloc(sizeof(int) * (sps->sps_num_ladf_intervals_minus2 + 1));
+        sps->sps_ladf_delta_threshold_minus1 = malloc(sizeof(int) * (sps->sps_num_ladf_intervals_minus2 + 1));
+        for (int i = 0; i < sps->sps_num_ladf_intervals_minus2 + 1; i++) {
+            sps->sps_ladf_qp_offset[i] = se();
+            sps->sps_ladf_delta_threshold_minus1[i] = ue();
+        }
+    }
+    sps->sps_explicit_scaling_list_enabled_flag = u(1);
+    if (sps->sps_lfnst_enabled_flag && sps->sps_explicit_scaling_list_enabled_flag) {
+        sps->sps_scaling_matrix_for_lfnst_disabled_flag = u(1);
+    }
+    if (sps->sps_act_enabled_flag && sps->sps_explicit_scaling_list_enabled_flag) {
+        sps->sps_scaling_matrix_for_alternative_colour_space_disabled_flag = u(1);
+    } else {
+        sps->sps_scaling_matrix_for_alternative_colour_space_disabled_flag = 0;
+    }
+    if (sps->sps_scaling_matrix_for_alternative_colour_space_disabled_flag) {
+        sps->sps_scaling_matrix_designated_colour_space_flag = u(1);
+    }
+    sps->sps_dep_quant_enabled_flag = u(1);
+    sps->sps_sign_data_hiding_enabled_flag = u(1);
+    sps->sps_virtual_boundaries_enabled_flag = u(1);
+    if (sps->sps_virtual_boundaries_enabled_flag) {
+        sps->sps_virtual_boundaries_present_flag = u(1);
+        if (sps->sps_virtual_boundaries_present_flag) {
+            sps->sps_num_ver_virtual_boundaries = ue();
+            sps->sps_virtual_boundary_pos_x_minus1 = malloc(sizeof(uint_t) * sps->sps_num_ver_virtual_boundaries);
+            for (int i = 0; i < sps->sps_num_ver_virtual_boundaries; i++) {
+                sps->sps_virtual_boundary_pos_x_minus1[i] = ue();
+            }
+            sps->sps_num_hor_virtual_boundaries = ue();
+            sps->sps_virtual_boundary_pos_y_minus1 = malloc(sizeof(uint_t) * sps->sps_num_hor_virtual_boundaries);
+            for (int i = 0; i < sps->sps_num_hor_virtual_boundaries; i++) {
+                sps->sps_virtual_boundary_pos_y_minus1[i] = ue();
+            }
+        } else {
+            sps->sps_num_ver_virtual_boundaries = 0;
+            sps->sps_num_hor_virtual_boundaries = 0;
+        }
+    } else {
+        sps->sps_virtual_boundaries_present_flag = 0;
+        sps->sps_num_ver_virtual_boundaries = 0;
+        sps->sps_num_hor_virtual_boundaries = 0;
+    }
+    if (sps->sps_ptl_dpb_hrd_params_present_flag) {
+        sps->sps_timing_hrd_params_present_flag = u(1);
+        if (sps->sps_timing_hrd_params_present_flag) {
+            sps->gth = general_timing_hrd_parameters();
+            if (sps->sps_max_sublayers_minus1 > 0) {
+                sps->sps_sublayer_cpb_params_present_flag = u(1);
+            }
+            uint_t firstSubLayer = sps->sps_sublayer_cpb_params_present_flag ? 0 : sps->sps_max_sublayers_minus1;
+            // ols_timing_hrd_parameters(firstSubLayer, sps->sps_max_sublayers_minus1);
+        }
+    }
+    if (sps->sps_max_sublayers_minus1 == 0) {
+        sps->sps_sublayer_cpb_params_present_flag = 0;
+    }
     // TODO: finish implementing this
     return sps;
 }
@@ -295,6 +447,11 @@ Sequence_Parameter_Set* initSPS() {
     sps->sps_delta_qp_diff_val = NULL;
     sps->sps_num_ref_pic_lists = NULL;
     sps->rpls = NULL;
+    sps->sps_ladf_qp_offset = NULL;
+    sps->sps_ladf_delta_threshold_minus1 = NULL;
+    sps->sps_virtual_boundary_pos_x_minus1 = NULL;
+    sps->sps_virtual_boundary_pos_y_minus1 = NULL;
+    sps->gth = NULL;
     return sps;
 }
 
@@ -357,7 +514,7 @@ void freeSPS(Sequence_Parameter_Set* sps) {
         }
         if (sps->sps_num_ref_pic_lists) {
             if (sps->rpls) {
-                for (int i = 0; i < (sps->sps_rpl1_same_as_rpl0_flag ? 1 : 2); i++) {
+                for (int i = 0; i < 2; i++) {
                     if (sps->rpls[i]) {
                         for (int j = 0; j < sps->sps_num_ref_pic_lists[i]; j++) {
                             if (sps->rpls[i][j]) {
@@ -370,6 +527,21 @@ void freeSPS(Sequence_Parameter_Set* sps) {
                 free(sps->rpls);
             }
             free(sps->sps_num_ref_pic_lists);
+        }
+        if (sps->sps_ladf_qp_offset) {
+            free(sps->sps_ladf_qp_offset);
+        }
+        if (sps->sps_ladf_delta_threshold_minus1) {
+            free(sps->sps_ladf_delta_threshold_minus1);
+        }
+        if (sps->sps_virtual_boundary_pos_x_minus1) {
+            free(sps->sps_virtual_boundary_pos_x_minus1);
+        }
+        if (sps->sps_virtual_boundary_pos_y_minus1) {
+            free(sps->sps_virtual_boundary_pos_y_minus1);
+        }
+        if (sps->gth) {
+            freeGTH(sps->gth);
         }
         free(sps);
     }
@@ -601,5 +773,116 @@ void printSPS(Sequence_Parameter_Set* sps) {
             printRPLS(sps->rpls[i][j]);
         }
     }
+    printVar("  sps_ref_wraparound_enabled_flag: %u\n", sps->sps_ref_wraparound_enabled_flag);
+    printVar("  sps_temporal_mvp_enabled_flag: %u\n", sps->sps_temporal_mvp_enabled_flag);
+    printVar("  sps_sbtmvp_enabled_flag: %u\n", sps->sps_sbtmvp_enabled_flag);
+    printVar("  sps_amvr_enabled_flag: %u\n", sps->sps_amvr_enabled_flag);
+    printVar("  sps_bdof_enabled_flag: %u\n", sps->sps_bdof_enabled_flag);
+    printVar("  sps_bdof_control_present_in_ph_flag: %u\n", sps->sps_bdof_control_present_in_ph_flag);
+    printVar("  sps_smvd_enabled_flag: %u\n", sps->sps_smvd_enabled_flag);
+    printVar("  sps_dmvr_enabled_flag: %u\n", sps->sps_dmvr_enabled_flag);
+    printVar("  sps_dmvr_control_present_in_ph_flag: %u\n", sps->sps_dmvr_control_present_in_ph_flag);
+    printVar("  sps_mmvd_enabled_flag: %u\n", sps->sps_mmvd_enabled_flag);
+    printVar("  sps_mmvd_fullpel_only_enabled_flag: %u\n", sps->sps_mmvd_fullpel_only_enabled_flag);
+    printVar("  sps_six_minus_max_num_merge_cand: %u\n", sps->sps_six_minus_max_num_merge_cand);
+    printVar("  sps_sbt_enabled_flag: %u\n", sps->sps_sbt_enabled_flag);
+    printVar("  sps_affine_enabled_flag: %u\n", sps->sps_affine_enabled_flag);
+    if (sps->sps_affine_enabled_flag) {
+        printVar("  sps_five_minus_max_num_subblock_merge_cand: %u\n", sps->sps_five_minus_max_num_subblock_merge_cand);
+    }
+    printVar("  sps_6param_affine_enabled_flag: %u\n", sps->sps_6param_affine_enabled_flag);
+    printVar("  sps_affine_amvr_enabled_flag: %u\n", sps->sps_affine_amvr_enabled_flag);
+    printVar("  sps_affine_prof_enabled_flag: %u\n", sps->sps_affine_prof_enabled_flag);
+    printVar("  sps_prof_control_present_in_ph_flag: %u\n", sps->sps_prof_control_present_in_ph_flag);
+    printVar("  sps_bcw_enabled_flag: %u\n", sps->sps_bcw_enabled_flag);
+    printVar("  sps_ciip_enabled_flag: %u\n", sps->sps_ciip_enabled_flag);
+    printVar("  sps_gpm_enabled_flag: %u\n", sps->sps_gpm_enabled_flag);
+    if (sps->sps_gpm_enabled_flag && sps->MaxNumMergeCand >=3) {
+        printVar("  sps_max_num_merge_cand_minus_max_num_gpm_cand: %u\n", sps->sps_max_num_merge_cand_minus_max_num_gpm_cand);
+    }
+    printVar("  sps_log2_parallel_merge_level_minus2: %u\n", sps->sps_log2_parallel_merge_level_minus2);
+    printVar("  sps_isp_enabled_flag: %u\n", sps->sps_isp_enabled_flag);
+    printVar("  sps_mrl_enabled_flag: %u\n", sps->sps_mrl_enabled_flag);
+    printVar("  sps_mip_enabled_flag: %u\n", sps->sps_mip_enabled_flag);
+    printVar("  sps_cclm_enabled_flag: %u\n", sps->sps_cclm_enabled_flag);
+    printVar("  sps_chroma_horizontal_collocated_flag: %u\n", sps->sps_chroma_horizontal_collocated_flag);
+    printVar("  sps_chroma_vertical_collocated_flag: %u\n", sps->sps_chroma_vertical_collocated_flag);
+    printVar("  sps_palette_enabled_flag: %u\n", sps->sps_palette_enabled_flag);
+    printVar("  sps_act_enabled_flag: %u\n", sps->sps_act_enabled_flag);
+    if (sps->sps_transform_skip_enabled_flag || sps->sps_palette_enabled_flag) {
+        printVar("  sps_min_qp_prime_ts: %u\n", sps->sps_min_qp_prime_ts);
+    }
+    printVar("  sps_ibc_enabled_flag: %u\n", sps->sps_ibc_enabled_flag);
+    if (sps->sps_ibc_enabled_flag) {
+        printVar("  sps_six_minus_max_num_ibc_merge_cand: %u\n", sps->sps_six_minus_max_num_ibc_merge_cand);
+    }
+    printVar("  sps_ladf_enabled_flag: %u\n", sps->sps_ladf_enabled_flag);
+    if (sps->sps_ladf_enabled_flag) {
+        printVar("  sps_num_ladf_intervals_minus2: %u\n", sps->sps_num_ladf_intervals_minus2);
+        printVar("  sps_ladf_lowest_interval_qp_offset: %i\n", sps->sps_ladf_lowest_interval_qp_offset);
+        printVar("  sps_ladf_qp_offset: {");
+        for (int i = 0; i < sps->sps_num_ladf_intervals_minus2 + 1; i++) {
+            if (i > 0) {
+                printf(",");
+            }
+            printf("%i", sps->sps_ladf_qp_offset[i]);
+        }
+        printf("}\n");
+        printVar("  sps_ladf_delta_threshold_minus1: {");
+        for (int i = 0; i < sps->sps_num_ladf_intervals_minus2 + 1; i++) {
+            if (i > 0) {
+                printf(",");
+            }
+            printf("%u", sps->sps_ladf_delta_threshold_minus1[i]);
+        }
+        printf("}\n");
+    }
+    printVar("  sps_explicit_scaling_list_enabled_flag: %u\n", sps->sps_explicit_scaling_list_enabled_flag);
+    if (sps->sps_lfnst_enabled_flag && sps->sps_explicit_scaling_list_enabled_flag) {
+        printVar("  sps_scaling_matrix_for_lfnst_disabled_flag: %u\n", sps->sps_scaling_matrix_for_lfnst_disabled_flag);
+    }
+    printVar("  sps_scaling_matrix_for_alternative_colour_space_disabled_flag: %u\n", sps->sps_scaling_matrix_for_alternative_colour_space_disabled_flag);
+    if (sps->sps_scaling_matrix_for_alternative_colour_space_disabled_flag) {
+        printVar("  sps_scaling_matrix_designated_colour_space_flag: %u\n", sps->sps_scaling_matrix_designated_colour_space_flag);
+    }
+    printVar("  sps_dep_quant_enabled_flag: %u\n", sps->sps_dep_quant_enabled_flag);
+    printVar("  sps_sign_data_hiding_enabled_flag: %u\n", sps->sps_sign_data_hiding_enabled_flag);
+    printVar("  sps_virtual_boundaries_present_flag: %u\n", sps->sps_virtual_boundaries_present_flag);
+    printVar("  sps_num_ver_virtual_boundaries: %u\n", sps->sps_num_ver_virtual_boundaries);
+    if (sps->sps_virtual_boundaries_enabled_flag && sps->sps_virtual_boundaries_present_flag) {
+        printVar("  sps_virtual_boundary_pos_x_minus1: {");
+        for (int i = 0; i < sps->sps_num_ver_virtual_boundaries; i++) {
+            if (i > 0) {
+                printf(",");
+            }
+            printf("%u", sps->sps_virtual_boundary_pos_x_minus1[i]);
+        }
+        printf("}\n");
+    }
+    printVar("  sps_num_hor_virtual_boundaries: %u\n", sps->sps_num_hor_virtual_boundaries);
+    if (sps->sps_virtual_boundaries_enabled_flag && sps->sps_virtual_boundaries_present_flag) {
+        printVar("  sps_virtual_boundary_pos_y_minus1: {");
+        for (int i = 0; i < sps->sps_num_hor_virtual_boundaries; i++) {
+            if (i > 0) {
+                printf(",");
+            }
+            printf("%u", sps->sps_virtual_boundary_pos_y_minus1[i]);
+        }
+        printf("}\n");
+    }
+    if (sps->sps_ptl_dpb_hrd_params_present_flag) {
+        printVar("  sps_timing_hrd_params_present_flag: %u\n", sps->sps_timing_hrd_params_present_flag);
+        if (sps->sps_timing_hrd_params_present_flag) {
+            printGTH(sps->gth);
+        }
+    }
+    printVar("  sps_sublayer_cpb_params_present_flag: %u\n", sps->sps_sublayer_cpb_params_present_flag);
+    printVar("  : %u\n", sps->);
+    printVar("  : %u\n", sps->);
+    printVar("  : %u\n", sps->);
+    printVar("  : %u\n", sps->);
+    printVar("  : %u\n", sps->);
+    printVar("  : %u\n", sps->);
+    printVar("  : %u\n", sps->);
     decIndent();
 }

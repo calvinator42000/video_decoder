@@ -5,6 +5,7 @@
 #include <ptl.h>
 #include <dpb.h>
 #include <rpls.h>
+#include <gth.h>
 
 typedef struct Reference_Picture_List_Structure_struct Reference_Picture_List_Structure;
 
@@ -13,6 +14,7 @@ typedef struct Sequence_Parameter_Set_struct {
     // Parameters
     uint_t CtbSizeY;
     uint_t numQpTables;
+    uint_t MaxNumMergeCand;
 
     uint_t sps_seq_parameter_set_id;
     uint_t sps_video_parameter_set_id;
@@ -135,8 +137,8 @@ typedef struct Sequence_Parameter_Set_struct {
     uint_t sps_six_minus_max_num_ibc_merge_cand;
     uint_t sps_ladf_enabled_flag;
     uint_t sps_num_ladf_intervals_minus2;
-    uint_t sps_ladf_lowest_interval_qp_offset;
-    uint_t* sps_ladf_qp_offset;
+    int sps_ladf_lowest_interval_qp_offset;
+    int* sps_ladf_qp_offset;
     uint_t* sps_ladf_delta_threshold_minus1;
     uint_t sps_explicit_scaling_list_enabled_flag;
     uint_t sps_scaling_matrix_for_lfnst_disabled_flag;
@@ -151,7 +153,7 @@ typedef struct Sequence_Parameter_Set_struct {
     uint_t sps_num_hor_virtual_boundaries;
     uint_t* sps_virtual_boundary_pos_y_minus1;
     uint_t sps_timing_hrd_params_present_flag;
-    // general_timing_hrd_parameters
+    General_Timing_Hrd_Parameters* gth;
     uint_t sps_sublayer_cpb_params_present_flag;
     // ols_timing_hrd_parameters
     uint_t sps_field_seq_flag;

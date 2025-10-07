@@ -20,6 +20,8 @@ Sequence_Parameter_Set* seq_parameter_set_rbsp() {
     sps->sps_ref_pic_resampling_enabled_flag = u(1);
     if (sps->sps_ref_pic_resampling_enabled_flag) {
         sps->sps_res_change_in_clvs_allowed_flag = u(1);
+    } else {
+        sps->sps_res_change_in_clvs_allowed_flag = 0;
     }
     sps->sps_pic_width_max_in_luma_samples = ue();
     sps->sps_pic_height_max_in_luma_samples = ue();
@@ -34,6 +36,11 @@ Sequence_Parameter_Set* seq_parameter_set_rbsp() {
         sps->sps_conf_win_right_offset = ue();
         sps->sps_conf_win_top_offset = ue();
         sps->sps_conf_win_bottom_offset = ue();
+    } else {
+        sps->sps_conf_win_left_offset = 0;
+        sps->sps_conf_win_right_offset = 0;
+        sps->sps_conf_win_top_offset = 0;
+        sps->sps_conf_win_bottom_offset = 0;
     }
     sps->sps_subpic_info_present_flag = u(1);
     if (sps->sps_subpic_info_present_flag) {
@@ -41,6 +48,9 @@ Sequence_Parameter_Set* seq_parameter_set_rbsp() {
         if (sps->sps_num_subpics_minus1 > 0) {
             sps->sps_independent_subpics_flag = u(1);
             sps->sps_subpic_same_size_flag = u(1);
+        } else {
+            sps->sps_independent_subpics_flag = 1;
+            sps->sps_subpic_same_size_flag = 0;
         }
         sps->sps_subpic_ctu_top_left_x = malloc(sizeof(uint_t) * (sps->sps_num_subpics_minus1 + 1));
         sps->sps_subpic_ctu_top_left_y = malloc(sizeof(uint_t) * (sps->sps_num_subpics_minus1 + 1));
@@ -48,24 +58,44 @@ Sequence_Parameter_Set* seq_parameter_set_rbsp() {
         sps->sps_subpic_height_minus1 = malloc(sizeof(uint_t) * (sps->sps_num_subpics_minus1 + 1));
         sps->sps_subpic_treated_as_pic_flag = malloc(sizeof(uint_t) * (sps->sps_num_subpics_minus1 + 1));
         sps->sps_loop_filter_across_subpic_enabled_flag = malloc(sizeof(uint_t) * (sps->sps_num_subpics_minus1 + 1));
+        uint_t numSubpicCols;
         for (int i = 0; sps->sps_num_subpics_minus1 > 0 && i <= sps->sps_num_subpics_minus1; i++) {
             if (!sps->sps_subpic_same_size_flag || i == 0) {
                 if (i > 0 && sps->sps_pic_width_max_in_luma_samples > sps->CtbSizeY) {
                     sps->sps_subpic_ctu_top_left_x[i] = u(ceil(log2(tmpWidthVal)));
+                } else {
+                    sps->sps_subpic_ctu_top_left_x[i] = 0;
                 }
                 if (i > 0 && sps->sps_pic_height_max_in_luma_samples > sps->CtbSizeY) {
                     sps->sps_subpic_ctu_top_left_y[i] = u(ceil(log2(tmpHeightVal)));
+                } else {
+                    sps->sps_subpic_ctu_top_left_y[i] = 0;
                 }
                 if (i < sps->sps_num_subpics_minus1 && sps->sps_pic_width_max_in_luma_samples > sps->CtbSizeY) {
                     sps->sps_subpic_width_minus1[i] = u(ceil(log2(tmpWidthVal)));
+                } else {
+                    sps->sps_subpic_width_minus1[i] = tmpWidthVal - sps->sps_subpic_ctu_top_left_x[i] - 1;
                 }
                 if (i < sps->sps_num_subpics_minus1 && sps->sps_pic_height_max_in_luma_samples > sps->CtbSizeY) {
                     sps->sps_subpic_height_minus1[i] = u(ceil(log2(tmpHeightVal)));
+                } else {
+                    sps->sps_subpic_height_minus1[i] = tmpHeightVal - sps->sps_subpic_ctu_top_left_y[i] - 1;
                 }
+            } else {
+                sps->sps_subpic_ctu_top_left_x[i] = (i % numSubpicCols) * (sps->sps_subpic_width_minus1[0] + 1);
+                sps->sps_subpic_ctu_top_left_y[i] = (i / numSubpicCols) * (sps->sps_subpic_height_minus1[0] + 1);
+                sps->sps_subpic_width_minus1[i] = sps->sps_subpic_width_minus1[0];
+                sps->sps_subpic_height_minus1[i] = sps->sps_subpic_height_minus1[0];
+            }
+            if (sps->sps_subpic_same_size_flag && i == 0) {
+                numSubpicCols = tmpWidthVal / (sps->sps_subpic_width_minus1[0] + 1);
             }
             if (!sps->sps_independent_subpics_flag) {
                 sps->sps_subpic_treated_as_pic_flag[i] = u(1);
                 sps->sps_loop_filter_across_subpic_enabled_flag[i] = u(1);
+            } else {
+                sps->sps_subpic_treated_as_pic_flag[i] = 1;
+                sps->sps_loop_filter_across_subpic_enabled_flag[i] = 0;
             }
         }
         sps->sps_subpic_id_len_minus1 = ue();
@@ -79,6 +109,11 @@ Sequence_Parameter_Set* seq_parameter_set_rbsp() {
                 }
             }
         }
+    } else {
+        sps->sps_num_subpics_minus1 = 0;
+        sps->sps_independent_subpics_flag = 1;
+        sps->sps_subpic_same_size_flag = 0;
+        sps->sps_subpic_id_mapping_explicitly_signalled_flag = 0;
     }
     sps->sps_bitdepth_minus8 = ue();
     sps->sps_entropy_coding_sync_enabled_flag = u(1);
@@ -101,8 +136,12 @@ Sequence_Parameter_Set* seq_parameter_set_rbsp() {
     if (sps->sps_ptl_dpb_hrd_params_present_flag) {
         if (sps->sps_max_sublayers_minus1 > 0) {
             sps->sps_sublayer_dpb_params_flag = u(1);
+        } else {
+            sps->sps_sublayer_dpb_params_flag = 0;
         }
         sps->dpb = dpb_parameters(sps->sps_max_sublayers_minus1, sps->sps_sublayer_dpb_params_flag);
+    } else {
+        sps->sps_sublayer_dpb_params_flag = 0;
     }
     sps->sps_log2_min_luma_coding_block_size_minus2 = ue();
     sps->sps_partition_constraints_override_enabled_flag = u(1);
@@ -111,9 +150,14 @@ Sequence_Parameter_Set* seq_parameter_set_rbsp() {
     if (sps->sps_max_mtt_hierarchy_depth_intra_slice_luma != 0) {
         sps->sps_log2_diff_max_bt_min_qt_intra_slice_luma = ue();
         sps->sps_log2_diff_max_tt_min_qt_intra_slice_luma = ue();
+    } else {
+        sps->sps_log2_diff_max_bt_min_qt_intra_slice_luma = 0;
+        sps->sps_log2_diff_max_tt_min_qt_intra_slice_luma = 0;
     }
     if (sps->sps_chroma_format_idc != 0) {
         sps->sps_qtbtt_dual_tree_intra_flag = u(1);
+    } else {
+        sps->sps_qtbtt_dual_tree_intra_flag = 0;
     }
     if (sps->sps_qtbtt_dual_tree_intra_flag) {
         sps->sps_log2_diff_min_qt_min_cb_intra_slice_chroma = ue();
@@ -121,26 +165,44 @@ Sequence_Parameter_Set* seq_parameter_set_rbsp() {
         if (sps->sps_max_mtt_hierarchy_depth_intra_slice_chroma != 0) {
             sps->sps_log2_diff_max_bt_min_qt_intra_slice_chroma = ue();
             sps->sps_log2_diff_max_tt_min_qt_intra_slice_chroma = ue();
+        } else {
+            sps->sps_log2_diff_max_bt_min_qt_intra_slice_chroma = 0;
+            sps->sps_log2_diff_max_tt_min_qt_intra_slice_chroma = 0;
         }
+    } else {
+        sps->sps_log2_diff_min_qt_min_cb_intra_slice_chroma = 0;
+        sps->sps_max_mtt_hierarchy_depth_intra_slice_chroma = 0;
+        sps->sps_log2_diff_max_bt_min_qt_intra_slice_chroma = 0;
+        sps->sps_log2_diff_max_tt_min_qt_intra_slice_chroma = 0;
     }
     sps->sps_log2_diff_min_qt_min_cb_inter_slice = ue();
     sps->sps_max_mtt_hierarchy_depth_inter_slice = ue();
     if (sps->sps_max_mtt_hierarchy_depth_inter_slice != 0) {
         sps->sps_log2_diff_max_bt_min_qt_inter_slice = ue();
         sps->sps_log2_diff_max_tt_min_qt_inter_slice = ue();
+    } else {
+        sps->sps_log2_diff_max_bt_min_qt_inter_slice = 0;
+        sps->sps_log2_diff_max_tt_min_qt_inter_slice = 0;
     }
     if (sps->CtbSizeY > 32) {
         sps->sps_max_luma_transform_size_64_flag = u(1);
+    } else {
+        sps->sps_max_luma_transform_size_64_flag = 0;
     }
     sps->sps_transform_skip_enabled_flag = u(1);
     if (sps->sps_transform_skip_enabled_flag) {
         sps->sps_log2_transform_skip_max_size_minus2 = ue();
         sps->sps_bdpcm_enabled_flag = u(1);
+    } else {
+        sps->sps_bdpcm_enabled_flag = 0;
     }
     sps->sps_mts_enabled_flag = u(1);
     if (sps->sps_mts_enabled_flag) {
         sps->sps_explicit_mts_intra_enabled_flag = u(1);
         sps->sps_explicit_mts_inter_enabled_flag = u(1);
+    } else {
+        sps->sps_explicit_mts_intra_enabled_flag = 0;
+        sps->sps_explicit_mts_inter_enabled_flag = 0;
     }
     sps->sps_lfnst_enabled_flag = u(1);
     if (sps->sps_chroma_format_idc != 0) {
@@ -161,11 +223,23 @@ Sequence_Parameter_Set* seq_parameter_set_rbsp() {
                 sps->sps_delta_qp_diff_val[i][j] = ue();
             }
         }
+    } else {
+        sps->sps_joint_cbcr_enabled_flag = 0;
+        sps->sps_same_qp_table_for_chroma_flag = 1;
+        sps->sps_qp_table_start_minus26 = malloc(sizeof(int) * 1);
+        sps->sps_qp_table_start_minus26[0] = 0;
+        sps->sps_num_points_in_qp_table_minus1 = malloc(sizeof(uint_t) * 1);
+        sps->sps_num_points_in_qp_table_minus1[0] = 0;
+        sps->sps_delta_qp_in_val_minus1 = malloc(sizeof(uint_t*) * 1);
+        sps->sps_delta_qp_in_val_minus1[0] = malloc(sizeof(uint_t) * 1);
+        sps->sps_delta_qp_in_val_minus1[0][0] = 0;
     }
     sps->sps_sao_enabled_flag = u(1);
     sps->sps_alf_enabled_flag = u(1);
     if (sps->sps_alf_enabled_flag && sps->sps_chroma_format_idc != 0) {
         sps->sps_ccalf_enabled_flag = u(1);
+    } else {
+        sps->sps_ccalf_enabled_flag = 0;
     }
     sps->sps_lmcs_enabled_flag = u(1);
     sps->sps_weighted_pred_flag = u(1);
@@ -173,17 +247,24 @@ Sequence_Parameter_Set* seq_parameter_set_rbsp() {
     sps->sps_long_term_ref_pics_flag = u(1);
     if (sps->sps_video_parameter_set_id > 0) {
         sps->sps_inter_layer_prediction_enabled_flag = u(1);
+    } else {
+        sps->sps_inter_layer_prediction_enabled_flag = 0;
     }
     sps->sps_idr_rpl_present_flag = u(1);
     sps->sps_rpl1_same_as_rpl0_flag = u(1);
-    sps->sps_num_ref_pic_lists = malloc(sizeof(uint_t) * (sps->sps_rpl1_same_as_rpl0_flag ? 1 : 2));
-    // sps->rpls = malloc(sizeof(Reference_Picture_List_Structure**) * (sps->sps_rpl1_same_as_rpl0_flag ? 1 : 2));
+    sps->sps_num_ref_pic_lists = malloc(sizeof(uint_t) * 2);
+    sps->rpls = malloc(sizeof(Reference_Picture_List_Structure**) * 2);
     for (int i = 0; i < (sps->sps_rpl1_same_as_rpl0_flag ? 1 : 2); i++) {
         sps->sps_num_ref_pic_lists[i] = ue();
-        // sps->rpls[i] = malloc(sizeof(Reference_Picture_List_Structure*) * sps->sps_num_ref_pic_lists[i]);
+        if (sps->sps_rpl1_same_as_rpl0_flag) {
+            sps->sps_num_ref_pic_lists[1] = sps->sps_num_ref_pic_lists[0];
+        }
+        sps->rpls[i] = malloc(sizeof(Reference_Picture_List_Structure*) * sps->sps_num_ref_pic_lists[i]);
         for (int j = 0; j < sps->sps_num_ref_pic_lists[i]; j++) {
-            // sps->rpls[i][j] = ref_pic_list_struct(i, j, sps);
-            // printRPLS(sps->rpls[i][j]);
+            sps->rpls[i][j] = ref_pic_list_struct(i, j, sps);
+            if (sps->sps_rpl1_same_as_rpl0_flag) {
+                sps->rpls[1][j] = sps->rpls[0][j];
+            }
         }
     }
     // TODO: finish implementing this
@@ -312,46 +393,68 @@ void printSPS(Sequence_Parameter_Set* sps) {
     }
     printVar("  sps_gdr_enabled_flag: %u\n", sps->sps_gdr_enabled_flag);
     printVar("  sps_ref_pic_resampling_enabled_flag: %u\n", sps->sps_ref_pic_resampling_enabled_flag);
-    if (sps->sps_ref_pic_resampling_enabled_flag) {
-        printVar("  sps_res_change_in_clvs_allowed_flag: %u\n", sps->sps_res_change_in_clvs_allowed_flag);
-    }
+    printVar("  sps_res_change_in_clvs_allowed_flag: %u\n", sps->sps_res_change_in_clvs_allowed_flag);
     printVar("  sps_pic_width_max_in_luma_samples: %u\n", sps->sps_pic_width_max_in_luma_samples);
     printVar("  sps_pic_height_max_in_luma_samples: %u\n", sps->sps_pic_height_max_in_luma_samples);
     printVar("  sps_conformance_window_flag: %u\n", sps->sps_conformance_window_flag);
-    if (sps->sps_conformance_window_flag) {
-        printVar("  sps_conf_win_left_offset: %u\n", sps->sps_conf_win_left_offset);
-        printVar("  sps_conf_win_right_offset: %u\n", sps->sps_conf_win_right_offset);
-        printVar("  sps_conf_win_top_offset: %u\n", sps->sps_conf_win_top_offset);
-        printVar("  sps_conf_win_bottom_offset: %u\n", sps->sps_conf_win_bottom_offset);
-    }
+    printVar("  sps_conf_win_left_offset: %u\n", sps->sps_conf_win_left_offset);
+    printVar("  sps_conf_win_right_offset: %u\n", sps->sps_conf_win_right_offset);
+    printVar("  sps_conf_win_top_offset: %u\n", sps->sps_conf_win_top_offset);
+    printVar("  sps_conf_win_bottom_offset: %u\n", sps->sps_conf_win_bottom_offset);
     printVar("  sps_subpic_info_present_flag: %u\n", sps->sps_subpic_info_present_flag);
+    printVar("  sps_num_subpics_minus1: %u\n", sps->sps_num_subpics_minus1);
+    printVar("  sps_independent_subpics_flag: %u\n", sps->sps_independent_subpics_flag);
+    printVar("  sps_subpic_same_size_flag: %u\n", sps->sps_subpic_same_size_flag);
     if (sps->sps_subpic_info_present_flag) {
-        printVar("  sps_num_subpics_minus1: %u\n", sps->sps_num_subpics_minus1);
-        if (sps->sps_num_subpics_minus1 > 0) {
-            printVar("  sps_independent_subpics_flag: %u\n", sps->sps_independent_subpics_flag);
-            printVar("  sps_subpic_same_size_flag: %u\n", sps->sps_subpic_same_size_flag);
-        }
-        for (int i = 0; sps->sps_num_subpics_minus1 > 0 && i <= sps->sps_num_subpics_minus1; i++) {
-            if (!sps->sps_subpic_same_size_flag || i == 0) {
-                if (i > 0 && sps->sps_pic_width_max_in_luma_samples > sps->CtbSizeY) {
-                    printVar("  sps_subpic_ctu_top_left_x[%u]: %u\n", i, sps->sps_subpic_ctu_top_left_x[i]);
-                }
-                if (i > 0 && sps->sps_pic_height_max_in_luma_samples > sps->CtbSizeY) {
-                    printVar("  sps_subpic_ctu_top_left_y[%u]: %u\n", i, sps->sps_subpic_ctu_top_left_y[i]);
-                }
-                if (i < sps->sps_num_subpics_minus1 && sps->sps_pic_width_max_in_luma_samples > sps->CtbSizeY) {
-                    printVar("  sps_subpic_width_minus1[%u]: %u\n", i, sps->sps_subpic_width_minus1[i]);
-                }
-                if (i < sps->sps_num_subpics_minus1 && sps->sps_pic_height_max_in_luma_samples > sps->CtbSizeY) {
-                    printVar("  sps_subpic_height_minus1[%u]: %u\n", i, sps->sps_subpic_height_minus1[i]);
-                }
+        printVar("  sps_subpic_ctu_top_left_x: {");
+        for (int i = 0; i <= sps->sps_num_subpics_minus1; i++) {
+            if (i > 0) {
+                printf(",");
             }
-            if (!sps->sps_independent_subpics_flag) {
-                printVar("  sps_subpic_treated_as_pic_flag[%u]: %u\n", i, sps->sps_subpic_treated_as_pic_flag);
-                printVar("  sps_loop_filter_across_subpic_enabled_flag[%u]: %u\n", i, sps->sps_loop_filter_across_subpic_enabled_flag);
-            }
+            printf("%u", sps->sps_subpic_ctu_top_left_x[i]);
         }
-        sps->sps_subpic_id_len_minus1 = ue();
+        printf("}\n");
+        printVar("  sps_subpic_ctu_top_left_y: {");
+        for (int i = 0; i <= sps->sps_num_subpics_minus1; i++) {
+            if (i > 0) {
+                printf(",");
+            }
+            printf("%u", sps->sps_subpic_ctu_top_left_y[i]);
+        }
+        printf("}\n");
+        printVar("  sps_subpic_width_minus1: {");
+        for (int i = 0; i <= sps->sps_num_subpics_minus1; i++) {
+            if (i > 0) {
+                printf(",");
+            }
+            printf("%u", sps->sps_subpic_width_minus1[i]);
+        }
+        printf("}\n");
+        printVar("  sps_subpic_height_minus1: {");
+        for (int i = 0; i <= sps->sps_num_subpics_minus1; i++) {
+            if (i > 0) {
+                printf(",");
+            }
+            printf("%u", sps->sps_subpic_height_minus1[i]);
+        }
+        printf("}\n");
+        printVar("  sps_subpic_treated_as_pic_flag: {");
+        for (int i = 0; i <= sps->sps_num_subpics_minus1; i++) {
+            if (i > 0) {
+                printf(",");
+            }
+            printf("%u", sps->sps_subpic_treated_as_pic_flag[i]);
+        }
+        printf("}\n");
+        printVar("  sps_loop_filter_across_subpic_enabled_flag: {");
+        for (int i = 0; i <= sps->sps_num_subpics_minus1; i++) {
+            if (i > 0) {
+                printf(",");
+            }
+            printf("%u", sps->sps_loop_filter_across_subpic_enabled_flag[i]);
+        }
+        printf("}\n");
+        printVar("  sps_subpic_id_len_minus1: %u\n", sps->sps_subpic_id_len_minus1);
         printVar("  sps_subpic_id_mapping_explicitly_signalled_flag: %u\n", sps->sps_subpic_id_mapping_explicitly_signalled_flag);
         if (sps->sps_subpic_id_mapping_explicitly_signalled_flag) {
             printVar("  sps_subpic_id_mapping_present_flag: %u\n", sps->sps_subpic_id_mapping_present_flag);
@@ -366,6 +469,8 @@ void printSPS(Sequence_Parameter_Set* sps) {
                 printf("}\n");
             }
         }
+    } else {
+        printVar("  sps_subpic_id_mapping_explicitly_signalled_flag: %u\n", sps->sps_subpic_id_mapping_explicitly_signalled_flag);
     }
     printVar("  sps_bitdepth_minus8: %u\n", sps->sps_bitdepth_minus8);
     printVar("  sps_entropy_coding_sync_enabled_flag: %u\n", sps->sps_entropy_coding_sync_enabled_flag);
@@ -373,7 +478,7 @@ void printSPS(Sequence_Parameter_Set* sps) {
     printVar("  sps_log2_max_pic_order_cnt_lsb_minus4: %u\n", sps->sps_log2_max_pic_order_cnt_lsb_minus4);
     printVar("  sps_poc_msb_cycle_flag: %u\n", sps->sps_poc_msb_cycle_flag);
     if (sps->sps_poc_msb_cycle_flag) {
-    printVar("  sps_poc_msb_cycle_len_minus1: %u\n", sps->sps_poc_msb_cycle_len_minus1);
+        printVar("  sps_poc_msb_cycle_len_minus1: %u\n", sps->sps_poc_msb_cycle_len_minus1);
     }
     printVar("  sps_num_extra_ph_bytes: %u\n", sps->sps_num_extra_ph_bytes);
     printVar("  sps_extra_ph_bit_present_flag: {");
@@ -393,11 +498,108 @@ void printSPS(Sequence_Parameter_Set* sps) {
         printf("%u", sps->sps_extra_sh_bit_present_flag[i]);
     }
     printf("}\n");
+    printVar("  sps_sublayer_dpb_params_flag: %u\n", sps->sps_sublayer_dpb_params_flag);
     if (sps->sps_ptl_dpb_hrd_params_present_flag) {
-        if (sps->sps_max_sublayers_minus1 > 0) {
-            printVar("  sps_sublayer_dpb_params_flag: %u\n", sps->sps_sublayer_dpb_params_flag);
-        }
         printDPB(sps->dpb);
+    }
+    printVar("  sps_log2_min_luma_coding_block_size_minus2: %u\n", sps->sps_log2_min_luma_coding_block_size_minus2);
+    printVar("  sps_partition_constraints_override_enabled_flag: %u\n", sps->sps_partition_constraints_override_enabled_flag);
+    printVar("  sps_log2_diff_min_qt_min_cb_intra_slice_luma: %u\n", sps->sps_log2_diff_min_qt_min_cb_intra_slice_luma);
+    sps->sps_log2_diff_min_qt_min_cb_intra_slice_luma = ue();
+    printVar("  sps_max_mtt_hierarchy_depth_intra_slice_luma: %u\n", sps->sps_max_mtt_hierarchy_depth_intra_slice_luma);
+    printVar("  sps_log2_diff_max_bt_min_qt_intra_slice_luma: %u\n", sps->sps_log2_diff_max_bt_min_qt_intra_slice_luma);
+    printVar("  sps_log2_diff_max_tt_min_qt_intra_slice_luma: %u\n", sps->sps_log2_diff_max_tt_min_qt_intra_slice_luma);
+    printVar("  sps_qtbtt_dual_tree_intra_flag: %u\n", sps->sps_qtbtt_dual_tree_intra_flag);
+    printVar("  sps_log2_diff_min_qt_min_cb_intra_slice_chroma: %u\n", sps->sps_log2_diff_min_qt_min_cb_intra_slice_chroma);
+    printVar("  sps_max_mtt_hierarchy_depth_intra_slice_chroma: %u\n", sps->sps_max_mtt_hierarchy_depth_intra_slice_chroma);
+    printVar("  sps_log2_diff_max_bt_min_qt_intra_slice_chroma: %u\n", sps->sps_log2_diff_max_bt_min_qt_intra_slice_chroma);
+    printVar("  sps_log2_diff_max_tt_min_qt_intra_slice_chroma: %u\n", sps->sps_log2_diff_max_tt_min_qt_intra_slice_chroma);
+    printVar("  sps_log2_diff_min_qt_min_cb_inter_slice: %u\n", sps->sps_log2_diff_min_qt_min_cb_inter_slice);
+    printVar("  sps_max_mtt_hierarchy_depth_inter_slice: %u\n", sps->sps_max_mtt_hierarchy_depth_inter_slice);
+    printVar("  sps_log2_diff_max_bt_min_qt_inter_slice: %u\n", sps->sps_log2_diff_max_bt_min_qt_inter_slice);
+    printVar("  sps_log2_diff_max_tt_min_qt_inter_slice: %u\n", sps->sps_log2_diff_max_tt_min_qt_inter_slice);
+    printVar("  sps_max_luma_transform_size_64_flag: %u\n", sps->sps_max_luma_transform_size_64_flag);
+    printVar("  sps_transform_skip_enabled_flag: %u\n", sps->sps_transform_skip_enabled_flag);
+    if (sps->sps_transform_skip_enabled_flag) {
+        printVar("  sps_log2_transform_skip_max_size_minus2: %u\n", sps->sps_log2_transform_skip_max_size_minus2);
+    }
+    printVar("  sps_bdpcm_enabled_flag: %u\n", sps->sps_bdpcm_enabled_flag);
+    printVar("  sps_mts_enabled_flag: %u\n", sps->sps_mts_enabled_flag);
+    printVar("  sps_explicit_mts_intra_enabled_flag: %u\n", sps->sps_explicit_mts_intra_enabled_flag);
+    printVar("  sps_explicit_mts_inter_enabled_flag: %u\n", sps->sps_explicit_mts_inter_enabled_flag);
+    printVar("  sps_lfnst_enabled_flag: %u\n", sps->sps_lfnst_enabled_flag);
+    printVar("  sps_joint_cbcr_enabled_flag: %u\n", sps->sps_joint_cbcr_enabled_flag);
+    printVar("  sps_same_qp_table_for_chroma_flag: %u\n", sps->sps_same_qp_table_for_chroma_flag);
+    printVar("  sps_qp_table_start_minus26: {");
+    for (int i = 0; i < sps->numQpTables; i++) {
+        if (i > 0) {
+            printf(",");
+        }
+        printf("%i", sps->sps_qp_table_start_minus26[i]);
+    }
+    printf("}\n");
+    printVar("  sps_num_points_in_qp_table_minus1: {");
+    for (int i = 0; i < sps->numQpTables; i++) {
+        if (i > 0) {
+            printf(",");
+        }
+        printf("%u", sps->sps_num_points_in_qp_table_minus1[i]);
+    }
+    printf("}\n");
+    printVar("  sps_delta_qp_in_val_minus1: {");
+    for (int i = 0; i < sps->numQpTables; i++) {
+        if (i > 0) {
+            printf(",");
+        }
+        printf("{");
+        for (int j = 0; j <= sps->sps_num_points_in_qp_table_minus1[i]; j++) {
+            if (j > 0) {
+                printf(",");
+            }
+            printf("%u", sps->sps_delta_qp_in_val_minus1[i][j]);
+        }
+        printf("}");
+    }
+    printf("}\n");
+    if (sps->sps_chroma_format_idc != 0) {
+        printVar("  sps_delta_qp_diff_val: {");
+        for (int i = 0; i < sps->numQpTables; i++) {
+            if (i > 0) {
+                printf(",");
+            }
+            printf("{");
+            for (int j = 0; j <= sps->sps_num_points_in_qp_table_minus1[i]; j++) {
+                if (j > 0) {
+                    printf(",");
+                }
+                printf("%u", sps->sps_delta_qp_diff_val[i][j]);
+            }
+            printf("}");
+        }
+        printf("}\n");
+    }
+    printVar("  sps_sao_enabled_flag: %u\n", sps->sps_sao_enabled_flag);
+    printVar("  sps_alf_enabled_flag: %u\n", sps->sps_alf_enabled_flag);
+    printVar("  sps_ccalf_enabled_flag: %u\n", sps->sps_ccalf_enabled_flag);
+    printVar("  sps_lmcs_enabled_flag: %u\n", sps->sps_lmcs_enabled_flag);
+    printVar("  sps_weighted_pred_flag: %u\n", sps->sps_weighted_pred_flag);
+    printVar("  sps_weighted_bipred_flag: %u\n", sps->sps_weighted_bipred_flag);
+    printVar("  sps_long_term_ref_pics_flag: %u\n", sps->sps_long_term_ref_pics_flag);
+    printVar("  sps_inter_layer_prediction_enabled_flag: %u\n", sps->sps_inter_layer_prediction_enabled_flag);
+    printVar("  sps_idr_rpl_present_flag: %u\n", sps->sps_idr_rpl_present_flag);
+    printVar("  sps_rpl1_same_as_rpl0_flag: %u\n", sps->sps_rpl1_same_as_rpl0_flag);
+    printVar("  sps_num_ref_pic_lists: {");
+    for (int i = 0; i < 2; i++) {
+        if (i > 0) {
+            printf(",");
+        }
+        printf("%u", sps->sps_num_ref_pic_lists[i]);
+    }
+    printf("}\n");
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < sps->sps_num_ref_pic_lists[i]; j++) {
+            printRPLS(sps->rpls[i][j]);
+        }
     }
     decIndent();
 }

@@ -141,10 +141,10 @@ void printRPLS(Reference_Picture_List_Structure* rpls) {
     printVar("  rpls_poc_lsb_lt: {");
     int j = 0;
     for (int i = 0; i < rpls->num_ref_entries; i++) {
-        if (i > 0) {
-            printf(",");
-        }
         if (!rpls->inter_layer_ref_pic_flag[i] && !rpls->st_ref_pic_flag[i] && !rpls->ltrp_in_header_flag) {
+            if (j > 0) {
+                printf(",");
+            }
             printf("%u", rpls->rpls_poc_lsb_lt[j]);
             j++;
         }

@@ -226,16 +226,16 @@ void printGCI(General_Constraints_Info* gci) {
         printVar("  gci_num_additional_bits: %u\n", gci->gci_num_additional_bits);
         size_t numAdditionalBitsUsed;
         if (gci->gci_num_additional_bits > 5) {
-            printVar("  gci_all_rap_pictures_constraint_flag: %u\n", gci->gci_all_rap_pictures_constraint_flag);
-            printVar("  gci_no_extended_precision_processing_constraint_flag: %u\n", gci->gci_no_extended_precision_processing_constraint_flag);
-            printVar("  gci_no_ts_residual_coding_rice_constraint_flag: %u\n", gci->gci_no_ts_residual_coding_rice_constraint_flag);
-            printVar("  gci_no_rrc_rice_extension_constraint_flag: %u\n", gci->gci_no_rrc_rice_extension_constraint_flag);
-            printVar("  gci_no_persistent_rice_adaptation_constraint_flag: %u\n", gci->gci_no_persistent_rice_adaptation_constraint_flag);
-            printVar("  gci_no_reverse_last_sig_coeff_constraint_flag: %u\n", gci->gci_no_reverse_last_sig_coeff_constraint_flag);
             numAdditionalBitsUsed = 6;
         } else {
             numAdditionalBitsUsed = 0;
         }
+        printVar("  gci_all_rap_pictures_constraint_flag: %u\n", gci->gci_all_rap_pictures_constraint_flag);
+        printVar("  gci_no_extended_precision_processing_constraint_flag: %u\n", gci->gci_no_extended_precision_processing_constraint_flag);
+        printVar("  gci_no_ts_residual_coding_rice_constraint_flag: %u\n", gci->gci_no_ts_residual_coding_rice_constraint_flag);
+        printVar("  gci_no_rrc_rice_extension_constraint_flag: %u\n", gci->gci_no_rrc_rice_extension_constraint_flag);
+        printVar("  gci_no_persistent_rice_adaptation_constraint_flag: %u\n", gci->gci_no_persistent_rice_adaptation_constraint_flag);
+        printVar("  gci_no_reverse_last_sig_coeff_constraint_flag: %u\n", gci->gci_no_reverse_last_sig_coeff_constraint_flag);
         printVar("  gci_reserved_bit: {");
         for (size_t i = 0; i < gci->gci_num_additional_bits - numAdditionalBitsUsed; i++) {
             if (i > 0) {

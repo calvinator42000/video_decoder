@@ -24,7 +24,7 @@ Profile_Tier_Level* profile_tier_level(uint_t profileTierPresentFlag, uint_t Max
     while (!byte_aligned()) {
         f(1, ptl_reserved_zero_bit);
     }
-    ptl->sublayer_level_idc = malloc(sizeof(uint_t) * MaxNumSubLayerMinus1+1);
+    ptl->sublayer_level_idc = malloc(sizeof(uint_t) * (MaxNumSubLayerMinus1+1));
     ptl->sublayer_level_idc[MaxNumSubLayerMinus1] = ptl->general_level_idc;
     for (int i = MaxNumSubLayerMinus1 - 1; i >= 0; i--) {
         if (ptl->ptl_sublayer_level_present_flag[i]) {
@@ -35,7 +35,7 @@ Profile_Tier_Level* profile_tier_level(uint_t profileTierPresentFlag, uint_t Max
     }
     if (profileTierPresentFlag) {
         ptl->ptl_num_sub_profiles = u(8);
-        ptl->general_sub_profile_idc = malloc(ptl->ptl_num_sub_profiles);
+        ptl->general_sub_profile_idc = malloc(sizeof(uint_t) * ptl->ptl_num_sub_profiles);
         for (int i = 0; i < ptl->ptl_num_sub_profiles; i++) {
             ptl->general_sub_profile_idc[i] = u(32);
         }

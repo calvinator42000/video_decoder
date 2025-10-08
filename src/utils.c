@@ -33,6 +33,13 @@ int more_data_in_payload(size_t initOffset, uint_t payloadSize) {
     return 1;
 }
 
+int payload_extension_present(size_t initOffset, uint_t payloadSize) {
+    if (!(next_bits(1) == 1 && (getDataBuffer()->bit_offset - initOffset) < 8 * payloadSize)) {
+        return 1;
+    }
+    return 0;
+}
+
 size_t next_bits(size_t n) {
     Data_Buffer* buffer = getDataBuffer();
     size_t value;

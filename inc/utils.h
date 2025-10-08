@@ -44,6 +44,7 @@ size_t readBytes(size_t index, size_t length);
 int byte_aligned();
 int more_data_in_byte_stream();
 int more_data_in_payload(size_t initOffset, uint_t payloadSize);
+int payload_extension_present(size_t initOffset, uint_t payloadSize);
 size_t next_bits(size_t n);
 size_t read_bits(size_t n);
 uint8_t b();

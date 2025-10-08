@@ -4,7 +4,7 @@
 #include <utils.h>
 
 // 7.3.5.1 General timing and HRD parameters syntax
-typedef struct {
+typedef struct General_Timing_Hrd_Parameters_struct {
     uint_t num_units_in_tick;
     uint_t time_scale;
     uint_t general_nal_hrd_params_present_flag;

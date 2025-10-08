@@ -26,6 +26,13 @@ int more_data_in_byte_stream() {
     return buffer->bit_offset < buffer->size * 8;
 }
 
+int more_data_in_payload(size_t initOffset, uint_t payloadSize) {
+    if (byte_aligned() && (getDataBuffer()->bit_offset - initOffset) == 8 * payloadSize) {
+        return 0;
+    }
+    return 1;
+}
+
 size_t next_bits(size_t n) {
     Data_Buffer* buffer = getDataBuffer();
     size_t value;

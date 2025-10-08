@@ -413,7 +413,7 @@ Sequence_Parameter_Set* seq_parameter_set_rbsp() {
                 sps->sps_sublayer_cpb_params_present_flag = u(1);
             }
             uint_t firstSubLayer = sps->sps_sublayer_cpb_params_present_flag ? 0 : sps->sps_max_sublayers_minus1;
-            // ols_timing_hrd_parameters(firstSubLayer, sps->sps_max_sublayers_minus1);
+            sps->oth = ols_timing_hrd_parameters(firstSubLayer, sps->sps_max_sublayers_minus1, sps->gth);
         }
     }
     if (sps->sps_max_sublayers_minus1 == 0) {
@@ -452,6 +452,7 @@ Sequence_Parameter_Set* initSPS() {
     sps->sps_virtual_boundary_pos_x_minus1 = NULL;
     sps->sps_virtual_boundary_pos_y_minus1 = NULL;
     sps->gth = NULL;
+    sps->oth = NULL;
     return sps;
 }
 
@@ -542,6 +543,9 @@ void freeSPS(Sequence_Parameter_Set* sps) {
         }
         if (sps->gth) {
             freeGTH(sps->gth);
+        }
+        if (sps->oth) {
+            freeOTH(sps->oth);
         }
         free(sps);
     }
@@ -877,12 +881,15 @@ void printSPS(Sequence_Parameter_Set* sps) {
         }
     }
     printVar("  sps_sublayer_cpb_params_present_flag: %u\n", sps->sps_sublayer_cpb_params_present_flag);
-    printVar("  : %u\n", sps->);
-    printVar("  : %u\n", sps->);
-    printVar("  : %u\n", sps->);
-    printVar("  : %u\n", sps->);
-    printVar("  : %u\n", sps->);
-    printVar("  : %u\n", sps->);
-    printVar("  : %u\n", sps->);
+    if (sps->sps_ptl_dpb_hrd_params_present_flag && sps->sps_timing_hrd_params_present_flag) {
+        printOTH(sps->oth);
+    }
+    // printVar("  : %u\n", sps->);
+    // printVar("  : %u\n", sps->);
+    // printVar("  : %u\n", sps->);
+    // printVar("  : %u\n", sps->);
+    // printVar("  : %u\n", sps->);
+    // printVar("  : %u\n", sps->);
+    // printVar("  : %u\n", sps->);
     decIndent();
 }

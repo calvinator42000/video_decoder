@@ -5,7 +5,6 @@
 #include <gth.h>
 #include <slh.h>
 
-
 struct General_Timing_Hrd_Parameters_struct;
 typedef struct General_Timing_Hrd_Parameters_struct General_Timing_Hrd_Parameters;
 

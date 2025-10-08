@@ -6,6 +6,7 @@
 #include <dpb.h>
 #include <rpls.h>
 #include <gth.h>
+#include <oth.h>
 
 typedef struct Reference_Picture_List_Structure_struct Reference_Picture_List_Structure;
 
@@ -155,7 +156,7 @@ typedef struct Sequence_Parameter_Set_struct {
     uint_t sps_timing_hrd_params_present_flag;
     General_Timing_Hrd_Parameters* gth;
     uint_t sps_sublayer_cpb_params_present_flag;
-    // ols_timing_hrd_parameters
+    OLS_Timing_and_HRD_Parameters* oth;
     uint_t sps_field_seq_flag;
     uint_t sps_vui_parameters_present_flag;
     uint_t sps_vui_payload_size_minus1;

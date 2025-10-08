@@ -8,6 +8,8 @@
 #include <gth.h>
 #include <oth.h>
 
+#define sps_vui_alignment_zero_bit 0
+
 typedef struct Reference_Picture_List_Structure_struct Reference_Picture_List_Structure;
 
 // 7.3.2.4 Sequence parameter set RBSP syntax - Rec. ITU-T H.266 (V3) (09/2023)

@@ -411,6 +411,8 @@ Sequence_Parameter_Set* seq_parameter_set_rbsp() {
             sps->gth = general_timing_hrd_parameters();
             if (sps->sps_max_sublayers_minus1 > 0) {
                 sps->sps_sublayer_cpb_params_present_flag = u(1);
+            } else {
+                sps->sps_sublayer_cpb_params_present_flag = 0;
             }
             uint_t firstSubLayer = sps->sps_sublayer_cpb_params_present_flag ? 0 : sps->sps_max_sublayers_minus1;
             sps->oth = ols_timing_hrd_parameters(firstSubLayer, sps->sps_max_sublayers_minus1, sps->gth);
@@ -418,6 +420,15 @@ Sequence_Parameter_Set* seq_parameter_set_rbsp() {
     }
     if (sps->sps_max_sublayers_minus1 == 0) {
         sps->sps_sublayer_cpb_params_present_flag = 0;
+    }
+    sps->sps_field_seq_flag = u(1);
+    sps->sps_vui_parameters_present_flag = u(1);
+    if (sps->sps_vui_parameters_present_flag) {
+        sps->sps_vui_payload_size_minus1 = ue();
+        while(!byte_aligned()) {
+            f(1, sps_vui_alignment_zero_bit);
+        }
+        // vui_payload(sps->sps_vui_payload_size_minus1 + 1);
     }
     // TODO: finish implementing this
     return sps;
@@ -884,8 +895,11 @@ void printSPS(Sequence_Parameter_Set* sps) {
     if (sps->sps_ptl_dpb_hrd_params_present_flag && sps->sps_timing_hrd_params_present_flag) {
         printOTH(sps->oth);
     }
-    // printVar("  : %u\n", sps->);
-    // printVar("  : %u\n", sps->);
+    printVar("  sps_field_seq_flag: %u\n", sps->sps_field_seq_flag);
+    printVar("  sps_vui_parameters_present_flag: %u\n", sps->sps_vui_parameters_present_flag);
+    if (sps->sps_vui_parameters_present_flag) {
+        printVar("  sps_vui_payload_size_minus1: %u\n", sps->sps_vui_payload_size_minus1);
+    }
     // printVar("  : %u\n", sps->);
     // printVar("  : %u\n", sps->);
     // printVar("  : %u\n", sps->);

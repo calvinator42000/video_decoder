@@ -7,7 +7,7 @@
 struct General_Timing_Hrd_Parameters_struct;
 typedef struct General_Timing_Hrd_Parameters_struct General_Timing_Hrd_Parameters;
 
-// 7.3.5.3 Sublayer HRD parameters syntax
+// 7.3.5.3 Sublayer HRD parameters syntax - Rec. ITU-T H.266 (V3) (09/2023)
 typedef struct {
     // Parameters
     General_Timing_Hrd_Parameters* gth;

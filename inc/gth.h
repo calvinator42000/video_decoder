@@ -3,7 +3,7 @@
 
 #include <utils.h>
 
-// 7.3.5.1 General timing and HRD parameters syntax
+// 7.3.5.1 General timing and HRD parameters syntax - Rec. ITU-T H.266 (V3) (09/2023)
 typedef struct General_Timing_Hrd_Parameters_struct {
     uint_t num_units_in_tick;
     uint_t time_scale;

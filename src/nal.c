@@ -39,6 +39,10 @@ NAL_Unit* nal_unit(size_t NumBytesInNalUnit) {
             break;
     }
 
+    if (ctx->rbsp->size * 8 != ctx->rbsp->bit_offset) {
+        fprintf(stderr, "ERROR: RBSP bytes remaining in NAL unit. Type: %u\n", nal->nuh->nal_unit_type);
+    }
+
     // Restore original buffer
     ctx->mode = BYTE_STREAM_MODE;
 

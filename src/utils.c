@@ -33,8 +33,24 @@ int more_data_in_payload(size_t initOffset, uint_t payloadSize) {
     return 1;
 }
 
-int payload_extension_present(size_t initOffset, uint_t payloadSize) {
-    if (!(next_bits(1) == 1 && (getDataBuffer()->bit_offset - initOffset) < 8 * payloadSize)) {
+int more_rbsp_data() {
+    if (!more_data_in_byte_stream()) {
+        return 0;
+    }
+    Data_Buffer* buffer = ctx->rbsp;
+    size_t byte_offset = buffer->size - 1;
+    size_t lastByte = readBytes(byte_offset, 1);
+    // Find last byte in rbsp that is not 0 as that will contain the rbsp_stop_one_bit
+    while (lastByte == 0) {
+        byte_offset--;
+        lastByte = readBytes(byte_offset, 1);
+    }
+    uint_t numShifts = 0;
+    while (lastByte != 0) {
+        lastByte <<= lastByte;
+        numShifts++;
+    }
+    if (buffer->bit_offset < byte_offset * 8 + numShifts - 1) {
         return 1;
     }
     return 0;
@@ -54,6 +70,13 @@ size_t next_bits(size_t n) {
     // Mask to keep only n bits
     value &= (1ULL << n) - 1;
     return value;
+}
+
+int payload_extension_present(size_t initOffset, uint_t payloadSize) {
+    if (!(next_bits(1) == 1 && (getDataBuffer()->bit_offset - initOffset) < 8 * payloadSize)) {
+        return 1;
+    }
+    return 0;
 }
 
 size_t read_bits(size_t n) {

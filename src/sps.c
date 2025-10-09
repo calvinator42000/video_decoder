@@ -428,7 +428,7 @@ Sequence_Parameter_Set* seq_parameter_set_rbsp() {
         while(!byte_aligned()) {
             f(1, sps_vui_alignment_zero_bit);
         }
-        // vui_payload(sps->sps_vui_payload_size_minus1 + 1);
+        sps->vui_pay = vui_payload(sps->sps_vui_payload_size_minus1 + 1, sps->sps_chroma_format_idc);
     }
     // TODO: finish implementing this
     return sps;
@@ -464,6 +464,7 @@ Sequence_Parameter_Set* initSPS() {
     sps->sps_virtual_boundary_pos_y_minus1 = NULL;
     sps->gth = NULL;
     sps->oth = NULL;
+    sps->vui_pay = NULL;
     return sps;
 }
 
@@ -557,6 +558,9 @@ void freeSPS(Sequence_Parameter_Set* sps) {
         }
         if (sps->oth) {
             freeOTH(sps->oth);
+        }
+        if (sps->vui_pay) {
+            freeVUI_Pay(sps->vui_pay);
         }
         free(sps);
     }
@@ -899,6 +903,7 @@ void printSPS(Sequence_Parameter_Set* sps) {
     printVar("  sps_vui_parameters_present_flag: %u\n", sps->sps_vui_parameters_present_flag);
     if (sps->sps_vui_parameters_present_flag) {
         printVar("  sps_vui_payload_size_minus1: %u\n", sps->sps_vui_payload_size_minus1);
+        printVUI_Pay(sps->vui_pay);
     }
     // printVar("  : %u\n", sps->);
     // printVar("  : %u\n", sps->);

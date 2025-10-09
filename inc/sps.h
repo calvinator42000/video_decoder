@@ -7,7 +7,9 @@
 #include <rpls.h>
 #include <gth.h>
 #include <oth.h>
+#include <vui_pay.h>
 
+// 7.4.3.4 Sequence paramter set RBSP semantics - Rec. ITU-T H.266 (V3) (09/2023)
 #define sps_vui_alignment_zero_bit 0
 
 typedef struct Reference_Picture_List_Structure_struct Reference_Picture_List_Structure;
@@ -162,8 +164,7 @@ typedef struct Sequence_Parameter_Set_struct {
     uint_t sps_field_seq_flag;
     uint_t sps_vui_parameters_present_flag;
     uint_t sps_vui_payload_size_minus1;
-    // uint_t sps_vui_alignment_zero_bit
-    // vui_payload
+    VUI_Payload* vui_pay;
     uint_t sps_extension_flag;
     uint_t sps_range_extension_flag;
     uint_t sps_extension_7bits;

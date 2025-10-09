@@ -8,6 +8,7 @@
 #include <gth.h>
 #include <oth.h>
 #include <vui_pay.h>
+#include <sre.h>
 
 // 7.4.3.4 Sequence paramter set RBSP semantics - Rec. ITU-T H.266 (V3) (09/2023)
 #define sps_vui_alignment_zero_bit 0
@@ -168,7 +169,7 @@ typedef struct Sequence_Parameter_Set_struct {
     uint_t sps_extension_flag;
     uint_t sps_range_extension_flag;
     uint_t sps_extension_7bits;
-    // sps_range_extension
+    SPS_Range_Extension* sre;
     uint_t sps_extension_data_flag;
 } Sequence_Parameter_Set;
 

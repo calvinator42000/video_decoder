@@ -430,6 +430,23 @@ Sequence_Parameter_Set* seq_parameter_set_rbsp() {
         }
         sps->vui_pay = vui_payload(sps->sps_vui_payload_size_minus1 + 1, sps->sps_chroma_format_idc);
     }
+    sps->sps_extension_flag = u(1);
+    if (sps->sps_extension_flag) {
+        sps->sps_range_extension_flag = u(1);
+        sps->sps_extension_7bits = u(7);
+        if (sps->sps_range_extension_flag) {
+            sps->sre = sps_range_extension(sps->sps_transform_skip_enabled_flag);
+        }
+    } else {
+        sps->sps_range_extension_flag = 0;
+        sps->sps_extension_7bits = 0;
+    }
+    if (sps->sps_extension_7bits) {
+        while(more_rbsp_data()) {
+            sps->sps_extension_data_flag = u(1);
+        }
+    }
+    rbsp_trailing_bits();
     // TODO: finish implementing this
     return sps;
 }
@@ -465,6 +482,7 @@ Sequence_Parameter_Set* initSPS() {
     sps->gth = NULL;
     sps->oth = NULL;
     sps->vui_pay = NULL;
+    sps->sre = NULL;
     return sps;
 }
 
@@ -561,6 +579,9 @@ void freeSPS(Sequence_Parameter_Set* sps) {
         }
         if (sps->vui_pay) {
             freeVUI_Pay(sps->vui_pay);
+        }
+        if (sps->sre) {
+            freeSRE(sps->sre);
         }
         free(sps);
     }
@@ -905,10 +926,14 @@ void printSPS(Sequence_Parameter_Set* sps) {
         printVar("  sps_vui_payload_size_minus1: %u\n", sps->sps_vui_payload_size_minus1);
         printVUI_Pay(sps->vui_pay);
     }
-    // printVar("  : %u\n", sps->);
-    // printVar("  : %u\n", sps->);
-    // printVar("  : %u\n", sps->);
-    // printVar("  : %u\n", sps->);
-    // printVar("  : %u\n", sps->);
+    printVar("  sps_extension_flag: %u\n", sps->sps_extension_flag);
+    printVar("  sps_range_extension_flag: %u\n", sps->sps_range_extension_flag);
+    printVar("  sps_extension_7bits: %u\n", sps->sps_extension_7bits);
+    if (sps->sps_extension_flag && sps->sps_range_extension_flag) {
+        printSRE(sps->sre);
+    }
+    if (sps->sps_extension_7bits) {
+        printVar("  sps_extension_data_flag: %u\n", sps->sps_extension_data_flag);
+    }
     decIndent();
 }

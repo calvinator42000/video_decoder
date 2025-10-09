@@ -59,11 +59,14 @@ void freeSLH(Sublayer_HRD_Parameters* slh) {
 void printSLH(Sublayer_HRD_Parameters* slh) {
     incIndent();
     if (slh == NULL) {
-        printVar("Sublayer HRD Paramters is NULL\n");
+        printIndent();
+        printf("Sublayer HRD Paramters is NULL\n");
         return;
     }
-    printVar("Sublayer HRD Paramters:\n");
-    printVar("  bit_rate_value_minus1: {");
+    printIndent();
+    printf("Sublayer HRD Paramters:\n");
+    printIndent();
+    printf("  bit_rate_value_minus1: {");
     for (int j = 0; j <= slh->gth->hrd_cpb_cnt_minus1; j++) {
         if (j == 0) {
             printf(",");
@@ -71,7 +74,8 @@ void printSLH(Sublayer_HRD_Parameters* slh) {
         printf("%u", slh->bit_rate_value_minus1[j]);
     }
     printf("}\n");
-    printVar("  cpb_size_value_minus1: {");
+    printIndent();
+    printf("  cpb_size_value_minus1: {");
     for (int j = 0; j <= slh->gth->hrd_cpb_cnt_minus1; j++) {
         if (j == 0) {
             printf(",");
@@ -79,7 +83,8 @@ void printSLH(Sublayer_HRD_Parameters* slh) {
         printf("%u", slh->cpb_size_value_minus1[j]);
     }
     printf("}\n");
-    printVar("  cpb_size_du_value_minus1: {");
+    printIndent();
+    printf("  cpb_size_du_value_minus1: {");
     for (int j = 0; j <= slh->gth->hrd_cpb_cnt_minus1; j++) {
         if (j == 0) {
             printf(",");
@@ -87,7 +92,8 @@ void printSLH(Sublayer_HRD_Parameters* slh) {
         printf("%u", slh->cpb_size_du_value_minus1[j]);
     }
     printf("}\n");
-    printVar("  bit_rate_du_value_minus1: {");
+    printIndent();
+    printf("  bit_rate_du_value_minus1: {");
     for (int j = 0; j <= slh->gth->hrd_cpb_cnt_minus1; j++) {
         if (j == 0) {
             printf(",");
@@ -95,7 +101,8 @@ void printSLH(Sublayer_HRD_Parameters* slh) {
         printf("%u", slh->bit_rate_du_value_minus1[j]);
     }
     printf("}\n");
-    printVar("  cbr_flag: {");
+    printIndent();
+    printf("  cbr_flag: {");
     for (int j = 0; j <= slh->gth->hrd_cpb_cnt_minus1; j++) {
         if (j == 0) {
             printf(",");

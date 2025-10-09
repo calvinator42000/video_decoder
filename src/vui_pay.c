@@ -51,11 +51,13 @@ void freeVUI_Pay(VUI_Payload* vui_pay) {
 void printVUI_Pay(VUI_Payload* vui_pay) {
     incIndent();
     if (vui_pay == NULL) {
-        printVar("VUI Payload is NULL\n");
+        printIndent();
+        printf("VUI Payload is NULL\n");
         return;
     }
-    printVar("VUI Payload:\n");
+    printIndent();
+    printf("VUI Payload:\n");
     printVUI_Par(vui_pay->vui_par);
-    printVar("  vui_reserved_payload_extension_data: %u\n", vui_pay->vui_reserved_payload_extension_data);
+    PRINT_VAR(vui_pay->vui_reserved_payload_extension_data);
     decIndent();
 }

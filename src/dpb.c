@@ -48,11 +48,14 @@ void freeDPB(DPB_Parameters* dpb) {
 void printDPB(DPB_Parameters* dpb) {
     incIndent();
     if (dpb == NULL) {
-        printVar("DPB Parameters is NULL\n");
+        printIndent();
+        printf("DPB Parameters is NULL\n");
         return;
     }
-    printVar("DPB Parameters:\n");
-    printVar("  dpb_max_dec_pic_buffering_minus1: {");
+    printIndent();
+    printf("DPB Parameters:\n");
+    printIndent();
+    printf("  dpb_max_dec_pic_buffering_minus1: {");
     for (int i = (dpb->subLayerInfoFlag ? 0 : dpb->MaxSubLayersMinus1); i <= dpb->MaxSubLayersMinus1; i++) {
         if (i > (dpb->subLayerInfoFlag ? 0 : dpb->MaxSubLayersMinus1)) {
             printf(",");
@@ -60,7 +63,8 @@ void printDPB(DPB_Parameters* dpb) {
         printf("%u", dpb->dpb_max_dec_pic_buffering_minus1[i]);
     }
     printf("}\n");
-    printVar("  dpb_max_num_reorder_pics: {");
+    printIndent();
+    printf("  dpb_max_num_reorder_pics: {");
     for (int i = (dpb->subLayerInfoFlag ? 0 : dpb->MaxSubLayersMinus1); i <= dpb->MaxSubLayersMinus1; i++) {
         if (i > (dpb->subLayerInfoFlag ? 0 : dpb->MaxSubLayersMinus1)) {
             printf(",");
@@ -68,7 +72,8 @@ void printDPB(DPB_Parameters* dpb) {
         printf("%u", dpb->dpb_max_num_reorder_pics[i]);
     }
     printf("}\n");
-    printVar("  dpb_max_latency_increase_plus1: {");
+    printIndent();
+    printf("  dpb_max_latency_increase_plus1: {");
     for (int i = (dpb->subLayerInfoFlag ? 0 : dpb->MaxSubLayersMinus1); i <= dpb->MaxSubLayersMinus1; i++) {
         if (i > (dpb->subLayerInfoFlag ? 0 : dpb->MaxSubLayersMinus1)) {
             printf(",");

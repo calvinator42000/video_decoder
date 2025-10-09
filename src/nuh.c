@@ -30,12 +30,14 @@ void freeNUH(NAL_Unit_Header* nuh) {
 void printNUH(NAL_Unit_Header* nuh) {
     incIndent();
     if (nuh == NULL) {
-        printVar("NAL Unit Header is NULL\n");
+        printIndent();
+        printf("NAL Unit Header is NULL\n");
         return;
     }
-    printVar("NAL Unit Header:\n");
-    printVar("  nuh_layer_id: %u\n", nuh->nuh_layer_id);
-    printVar("  nal_unit_type: %u\n", nuh->nal_unit_type);
-    printVar("  nuh_temporal_id_plus1: %u\n", nuh->nuh_temporal_id_plus1);
+    printIndent();
+    printf("NAL Unit Header:\n");
+    PRINT_VAR(nuh->nuh_layer_id);
+    PRINT_VAR(nuh->nal_unit_type);
+    PRINT_VAR(nuh->nuh_temporal_id_plus1);
     decIndent();
 }

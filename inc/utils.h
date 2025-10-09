@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include <stdarg.h>
 #include <string.h>
 #include <math.h>
 
@@ -68,6 +67,10 @@ void freeContext();
 void incIndent();
 void decIndent();
 void printIndent();
-void printVar(char* fmt_str, ...);
+
+#define PRINT_VAR(v) { \
+    printIndent(); \
+    printf("  %s: %u\n", #v, v); \
+}
 
 #endif // UTILS_H

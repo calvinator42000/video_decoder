@@ -98,15 +98,18 @@ void freeRPLS(Reference_Picture_List_Structure* rpls) {
 void printRPLS(Reference_Picture_List_Structure* rpls) {
     incIndent();
     if (rpls == NULL) {
-        printVar("Reference Picture List Structure is NULL\n");
+        printIndent();
+        printf("Reference Picture List Structure is NULL\n");
         return;
     }
-    printVar("Reference Picture List Structure:\n");
-    printVar("  num_ref_entries: %u\n", rpls->num_ref_entries);
+    printIndent();
+    printf("Reference Picture List Structure:\n");
+    PRINT_VAR(rpls->num_ref_entries);
     if (rpls->sps->sps_long_term_ref_pics_flag && ((rpls->rplsIdx < rpls->sps->sps_num_ref_pic_lists[rpls->listIdx] && rpls->num_ref_entries > 0) || (rpls->rplsIdx == rpls->sps->sps_num_ref_pic_lists[rpls->listIdx]))) {
-        printVar("  ltrp_in_header_flag: %u\n", rpls->ltrp_in_header_flag);
+        PRINT_VAR(rpls->ltrp_in_header_flag);
     }
-    printVar("  inter_layer_ref_pic_flag: {");
+    printIndent();
+    printf("  inter_layer_ref_pic_flag: {");
     for (int i = 0; i < rpls->num_ref_entries; i++) {
         if (i > 0) {
             printf(",");
@@ -114,7 +117,8 @@ void printRPLS(Reference_Picture_List_Structure* rpls) {
         printf("%u", rpls->inter_layer_ref_pic_flag[i]);
     }
     printf("}\n");
-    printVar("  st_ref_pic_flag: {");
+    printIndent();
+    printf("  st_ref_pic_flag: {");
     for (int i = 0; i < rpls->num_ref_entries; i++) {
         if (i > 0) {
             printf(",");
@@ -126,7 +130,8 @@ void printRPLS(Reference_Picture_List_Structure* rpls) {
         }
     }
     printf("}\n");
-    printVar("  abs_delta_poc_st: {");
+    printIndent();
+    printf("  abs_delta_poc_st: {");
     for (int i = 0; i < rpls->num_ref_entries; i++) {
         if (i > 0) {
             printf(",");
@@ -138,7 +143,8 @@ void printRPLS(Reference_Picture_List_Structure* rpls) {
         }
     }
     printf("}\n");
-    printVar("  rpls_poc_lsb_lt: {");
+    printIndent();
+    printf("  rpls_poc_lsb_lt: {");
     int j = 0;
     for (int i = 0; i < rpls->num_ref_entries; i++) {
         if (!rpls->inter_layer_ref_pic_flag[i] && !rpls->st_ref_pic_flag[i] && !rpls->ltrp_in_header_flag) {
@@ -150,7 +156,8 @@ void printRPLS(Reference_Picture_List_Structure* rpls) {
         }
     }
     printf("}\n");
-    printVar("  ilrp_idx: {");
+    printIndent();
+    printf("  ilrp_idx: {");
     for (int i = 0; i < rpls->num_ref_entries; i++) {
         if (i > 0) {
             printf(",");
@@ -162,7 +169,8 @@ void printRPLS(Reference_Picture_List_Structure* rpls) {
         }
     }
     printf("}\n");
-    printVar("  strp_entry_sign_flag: {");
+    printIndent();
+    printf("  strp_entry_sign_flag: {");
     for (int i = 0; i < rpls->num_ref_entries; i++) {
         if (i > 0) {
             printf(",");

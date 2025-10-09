@@ -590,35 +590,38 @@ void freeSPS(Sequence_Parameter_Set* sps) {
 void printSPS(Sequence_Parameter_Set* sps) {
     incIndent();
     if (sps == NULL) {
-        printVar("Sequence Parameter Set is NULL\n");
+        printIndent();
+        printf("Sequence Parameter Set is NULL\n");
         return;
     }
-    printVar("Sequence Parameter Set:\n");
-    printVar("  sps_seq_parameter_set_id: %u\n", sps->sps_seq_parameter_set_id);
-    printVar("  sps_video_parameter_set_id: %u\n", sps->sps_video_parameter_set_id);
-    printVar("  sps_max_sublayers_minus1: %u\n", sps->sps_max_sublayers_minus1);
-    printVar("  sps_chroma_format_idc: %u\n", sps->sps_chroma_format_idc);
-    printVar("  sps_log2_ctu_size_minus5: %u\n", sps->sps_log2_ctu_size_minus5);
-    printVar("  sps_ptl_dpb_hrd_params_present_flag: %u\n", sps->sps_ptl_dpb_hrd_params_present_flag);
+    printIndent();
+    printf("Sequence Parameter Set:\n");
+    PRINT_VAR(sps->sps_seq_parameter_set_id);
+    PRINT_VAR(sps->sps_video_parameter_set_id);
+    PRINT_VAR(sps->sps_max_sublayers_minus1);
+    PRINT_VAR(sps->sps_chroma_format_idc);
+    PRINT_VAR(sps->sps_log2_ctu_size_minus5);
+    PRINT_VAR(sps->sps_ptl_dpb_hrd_params_present_flag);
     if (sps->sps_ptl_dpb_hrd_params_present_flag) {
         printPTL(sps->ptl);
     }
-    printVar("  sps_gdr_enabled_flag: %u\n", sps->sps_gdr_enabled_flag);
-    printVar("  sps_ref_pic_resampling_enabled_flag: %u\n", sps->sps_ref_pic_resampling_enabled_flag);
-    printVar("  sps_res_change_in_clvs_allowed_flag: %u\n", sps->sps_res_change_in_clvs_allowed_flag);
-    printVar("  sps_pic_width_max_in_luma_samples: %u\n", sps->sps_pic_width_max_in_luma_samples);
-    printVar("  sps_pic_height_max_in_luma_samples: %u\n", sps->sps_pic_height_max_in_luma_samples);
-    printVar("  sps_conformance_window_flag: %u\n", sps->sps_conformance_window_flag);
-    printVar("  sps_conf_win_left_offset: %u\n", sps->sps_conf_win_left_offset);
-    printVar("  sps_conf_win_right_offset: %u\n", sps->sps_conf_win_right_offset);
-    printVar("  sps_conf_win_top_offset: %u\n", sps->sps_conf_win_top_offset);
-    printVar("  sps_conf_win_bottom_offset: %u\n", sps->sps_conf_win_bottom_offset);
-    printVar("  sps_subpic_info_present_flag: %u\n", sps->sps_subpic_info_present_flag);
-    printVar("  sps_num_subpics_minus1: %u\n", sps->sps_num_subpics_minus1);
-    printVar("  sps_independent_subpics_flag: %u\n", sps->sps_independent_subpics_flag);
-    printVar("  sps_subpic_same_size_flag: %u\n", sps->sps_subpic_same_size_flag);
+    PRINT_VAR(sps->sps_gdr_enabled_flag);
+    PRINT_VAR(sps->sps_ref_pic_resampling_enabled_flag);
+    PRINT_VAR(sps->sps_res_change_in_clvs_allowed_flag);
+    PRINT_VAR(sps->sps_pic_width_max_in_luma_samples);
+    PRINT_VAR(sps->sps_pic_height_max_in_luma_samples);
+    PRINT_VAR(sps->sps_conformance_window_flag);
+    PRINT_VAR(sps->sps_conf_win_left_offset);
+    PRINT_VAR(sps->sps_conf_win_right_offset);
+    PRINT_VAR(sps->sps_conf_win_top_offset);
+    PRINT_VAR(sps->sps_conf_win_bottom_offset);
+    PRINT_VAR(sps->sps_subpic_info_present_flag);
+    PRINT_VAR(sps->sps_num_subpics_minus1);
+    PRINT_VAR(sps->sps_independent_subpics_flag);
+    PRINT_VAR(sps->sps_subpic_same_size_flag);
     if (sps->sps_subpic_info_present_flag) {
-        printVar("  sps_subpic_ctu_top_left_x: {");
+        printIndent();
+        printf("  sps_subpic_ctu_top_left_x: {");
         for (int i = 0; i <= sps->sps_num_subpics_minus1; i++) {
             if (i > 0) {
                 printf(",");
@@ -626,7 +629,8 @@ void printSPS(Sequence_Parameter_Set* sps) {
             printf("%u", sps->sps_subpic_ctu_top_left_x[i]);
         }
         printf("}\n");
-        printVar("  sps_subpic_ctu_top_left_y: {");
+        printIndent();
+        printf("  sps_subpic_ctu_top_left_y: {");
         for (int i = 0; i <= sps->sps_num_subpics_minus1; i++) {
             if (i > 0) {
                 printf(",");
@@ -634,7 +638,8 @@ void printSPS(Sequence_Parameter_Set* sps) {
             printf("%u", sps->sps_subpic_ctu_top_left_y[i]);
         }
         printf("}\n");
-        printVar("  sps_subpic_width_minus1: {");
+        printIndent();
+        printf("  sps_subpic_width_minus1: {");
         for (int i = 0; i <= sps->sps_num_subpics_minus1; i++) {
             if (i > 0) {
                 printf(",");
@@ -642,7 +647,8 @@ void printSPS(Sequence_Parameter_Set* sps) {
             printf("%u", sps->sps_subpic_width_minus1[i]);
         }
         printf("}\n");
-        printVar("  sps_subpic_height_minus1: {");
+        printIndent();
+        printf("  sps_subpic_height_minus1: {");
         for (int i = 0; i <= sps->sps_num_subpics_minus1; i++) {
             if (i > 0) {
                 printf(",");
@@ -650,7 +656,8 @@ void printSPS(Sequence_Parameter_Set* sps) {
             printf("%u", sps->sps_subpic_height_minus1[i]);
         }
         printf("}\n");
-        printVar("  sps_subpic_treated_as_pic_flag: {");
+        printIndent();
+        printf("  sps_subpic_treated_as_pic_flag: {");
         for (int i = 0; i <= sps->sps_num_subpics_minus1; i++) {
             if (i > 0) {
                 printf(",");
@@ -658,7 +665,8 @@ void printSPS(Sequence_Parameter_Set* sps) {
             printf("%u", sps->sps_subpic_treated_as_pic_flag[i]);
         }
         printf("}\n");
-        printVar("  sps_loop_filter_across_subpic_enabled_flag: {");
+        printIndent();
+        printf("  sps_loop_filter_across_subpic_enabled_flag: {");
         for (int i = 0; i <= sps->sps_num_subpics_minus1; i++) {
             if (i > 0) {
                 printf(",");
@@ -666,12 +674,13 @@ void printSPS(Sequence_Parameter_Set* sps) {
             printf("%u", sps->sps_loop_filter_across_subpic_enabled_flag[i]);
         }
         printf("}\n");
-        printVar("  sps_subpic_id_len_minus1: %u\n", sps->sps_subpic_id_len_minus1);
-        printVar("  sps_subpic_id_mapping_explicitly_signalled_flag: %u\n", sps->sps_subpic_id_mapping_explicitly_signalled_flag);
+        PRINT_VAR(sps->sps_subpic_id_len_minus1);
+        PRINT_VAR(sps->sps_subpic_id_mapping_explicitly_signalled_flag);
         if (sps->sps_subpic_id_mapping_explicitly_signalled_flag) {
-            printVar("  sps_subpic_id_mapping_present_flag: %u\n", sps->sps_subpic_id_mapping_present_flag);
+            PRINT_VAR(sps->sps_subpic_id_mapping_present_flag);
             if (sps->sps_subpic_id_mapping_present_flag) {
-                printVar("  sps_subpic_id: {");
+                printIndent();
+                printf("  sps_subpic_id: {");
                 for (int i = 0; i <= sps->sps_num_subpics_minus1; i++) {
                     if (i > 0) {
                         printf(",");
@@ -682,18 +691,19 @@ void printSPS(Sequence_Parameter_Set* sps) {
             }
         }
     } else {
-        printVar("  sps_subpic_id_mapping_explicitly_signalled_flag: %u\n", sps->sps_subpic_id_mapping_explicitly_signalled_flag);
+        PRINT_VAR(sps->sps_subpic_id_mapping_explicitly_signalled_flag);
     }
-    printVar("  sps_bitdepth_minus8: %u\n", sps->sps_bitdepth_minus8);
-    printVar("  sps_entropy_coding_sync_enabled_flag: %u\n", sps->sps_entropy_coding_sync_enabled_flag);
-    printVar("  sps_entry_point_offsets_present_flag: %u\n", sps->sps_entry_point_offsets_present_flag);
-    printVar("  sps_log2_max_pic_order_cnt_lsb_minus4: %u\n", sps->sps_log2_max_pic_order_cnt_lsb_minus4);
-    printVar("  sps_poc_msb_cycle_flag: %u\n", sps->sps_poc_msb_cycle_flag);
+    PRINT_VAR(sps->sps_bitdepth_minus8);
+    PRINT_VAR(sps->sps_entropy_coding_sync_enabled_flag);
+    PRINT_VAR(sps->sps_entry_point_offsets_present_flag);
+    PRINT_VAR(sps->sps_log2_max_pic_order_cnt_lsb_minus4);
+    PRINT_VAR(sps->sps_poc_msb_cycle_flag);
     if (sps->sps_poc_msb_cycle_flag) {
-        printVar("  sps_poc_msb_cycle_len_minus1: %u\n", sps->sps_poc_msb_cycle_len_minus1);
+        PRINT_VAR(sps->sps_poc_msb_cycle_len_minus1);
     }
-    printVar("  sps_num_extra_ph_bytes: %u\n", sps->sps_num_extra_ph_bytes);
-    printVar("  sps_extra_ph_bit_present_flag: {");
+    PRINT_VAR(sps->sps_num_extra_ph_bytes);
+    printIndent();
+    printf("  sps_extra_ph_bit_present_flag: {");
     for (int i = 0; i < (sps->sps_num_extra_ph_bytes * 8); i++) {
         if (i > 0) {
             printf(",");
@@ -701,8 +711,9 @@ void printSPS(Sequence_Parameter_Set* sps) {
         printf("%u", sps->sps_extra_ph_bit_present_flag[i]);
     }
     printf("}\n");
-    printVar("  sps_num_extra_sh_bytes: %u\n", sps->sps_num_extra_sh_bytes);
-    printVar("  sps_extra_sh_bit_present_flag: {");
+    PRINT_VAR(sps->sps_num_extra_sh_bytes);
+    printIndent();
+    printf("  sps_extra_sh_bit_present_flag: {");
     for (int i = 0; i < (sps->sps_num_extra_sh_bytes * 8); i++) {
         if (i > 0) {
             printf(",");
@@ -710,39 +721,39 @@ void printSPS(Sequence_Parameter_Set* sps) {
         printf("%u", sps->sps_extra_sh_bit_present_flag[i]);
     }
     printf("}\n");
-    printVar("  sps_sublayer_dpb_params_flag: %u\n", sps->sps_sublayer_dpb_params_flag);
+    PRINT_VAR(sps->sps_sublayer_dpb_params_flag);
     if (sps->sps_ptl_dpb_hrd_params_present_flag) {
         printDPB(sps->dpb);
     }
-    printVar("  sps_log2_min_luma_coding_block_size_minus2: %u\n", sps->sps_log2_min_luma_coding_block_size_minus2);
-    printVar("  sps_partition_constraints_override_enabled_flag: %u\n", sps->sps_partition_constraints_override_enabled_flag);
-    printVar("  sps_log2_diff_min_qt_min_cb_intra_slice_luma: %u\n", sps->sps_log2_diff_min_qt_min_cb_intra_slice_luma);
-    sps->sps_log2_diff_min_qt_min_cb_intra_slice_luma = ue();
-    printVar("  sps_max_mtt_hierarchy_depth_intra_slice_luma: %u\n", sps->sps_max_mtt_hierarchy_depth_intra_slice_luma);
-    printVar("  sps_log2_diff_max_bt_min_qt_intra_slice_luma: %u\n", sps->sps_log2_diff_max_bt_min_qt_intra_slice_luma);
-    printVar("  sps_log2_diff_max_tt_min_qt_intra_slice_luma: %u\n", sps->sps_log2_diff_max_tt_min_qt_intra_slice_luma);
-    printVar("  sps_qtbtt_dual_tree_intra_flag: %u\n", sps->sps_qtbtt_dual_tree_intra_flag);
-    printVar("  sps_log2_diff_min_qt_min_cb_intra_slice_chroma: %u\n", sps->sps_log2_diff_min_qt_min_cb_intra_slice_chroma);
-    printVar("  sps_max_mtt_hierarchy_depth_intra_slice_chroma: %u\n", sps->sps_max_mtt_hierarchy_depth_intra_slice_chroma);
-    printVar("  sps_log2_diff_max_bt_min_qt_intra_slice_chroma: %u\n", sps->sps_log2_diff_max_bt_min_qt_intra_slice_chroma);
-    printVar("  sps_log2_diff_max_tt_min_qt_intra_slice_chroma: %u\n", sps->sps_log2_diff_max_tt_min_qt_intra_slice_chroma);
-    printVar("  sps_log2_diff_min_qt_min_cb_inter_slice: %u\n", sps->sps_log2_diff_min_qt_min_cb_inter_slice);
-    printVar("  sps_max_mtt_hierarchy_depth_inter_slice: %u\n", sps->sps_max_mtt_hierarchy_depth_inter_slice);
-    printVar("  sps_log2_diff_max_bt_min_qt_inter_slice: %u\n", sps->sps_log2_diff_max_bt_min_qt_inter_slice);
-    printVar("  sps_log2_diff_max_tt_min_qt_inter_slice: %u\n", sps->sps_log2_diff_max_tt_min_qt_inter_slice);
-    printVar("  sps_max_luma_transform_size_64_flag: %u\n", sps->sps_max_luma_transform_size_64_flag);
-    printVar("  sps_transform_skip_enabled_flag: %u\n", sps->sps_transform_skip_enabled_flag);
+    PRINT_VAR(sps->sps_log2_min_luma_coding_block_size_minus2);
+    PRINT_VAR(sps->sps_partition_constraints_override_enabled_flag);
+    PRINT_VAR(sps->sps_log2_diff_min_qt_min_cb_intra_slice_luma);
+    PRINT_VAR(sps->sps_max_mtt_hierarchy_depth_intra_slice_luma);
+    PRINT_VAR(sps->sps_log2_diff_max_bt_min_qt_intra_slice_luma);
+    PRINT_VAR(sps->sps_log2_diff_max_tt_min_qt_intra_slice_luma);
+    PRINT_VAR(sps->sps_qtbtt_dual_tree_intra_flag);
+    PRINT_VAR(sps->sps_log2_diff_min_qt_min_cb_intra_slice_chroma);
+    PRINT_VAR(sps->sps_max_mtt_hierarchy_depth_intra_slice_chroma);
+    PRINT_VAR(sps->sps_log2_diff_max_bt_min_qt_intra_slice_chroma);
+    PRINT_VAR(sps->sps_log2_diff_max_tt_min_qt_intra_slice_chroma);
+    PRINT_VAR(sps->sps_log2_diff_min_qt_min_cb_inter_slice);
+    PRINT_VAR(sps->sps_max_mtt_hierarchy_depth_inter_slice);
+    PRINT_VAR(sps->sps_log2_diff_max_bt_min_qt_inter_slice);
+    PRINT_VAR(sps->sps_log2_diff_max_tt_min_qt_inter_slice);
+    PRINT_VAR(sps->sps_max_luma_transform_size_64_flag);
+    PRINT_VAR(sps->sps_transform_skip_enabled_flag);
     if (sps->sps_transform_skip_enabled_flag) {
-        printVar("  sps_log2_transform_skip_max_size_minus2: %u\n", sps->sps_log2_transform_skip_max_size_minus2);
+        PRINT_VAR(sps->sps_log2_transform_skip_max_size_minus2);
     }
-    printVar("  sps_bdpcm_enabled_flag: %u\n", sps->sps_bdpcm_enabled_flag);
-    printVar("  sps_mts_enabled_flag: %u\n", sps->sps_mts_enabled_flag);
-    printVar("  sps_explicit_mts_intra_enabled_flag: %u\n", sps->sps_explicit_mts_intra_enabled_flag);
-    printVar("  sps_explicit_mts_inter_enabled_flag: %u\n", sps->sps_explicit_mts_inter_enabled_flag);
-    printVar("  sps_lfnst_enabled_flag: %u\n", sps->sps_lfnst_enabled_flag);
-    printVar("  sps_joint_cbcr_enabled_flag: %u\n", sps->sps_joint_cbcr_enabled_flag);
-    printVar("  sps_same_qp_table_for_chroma_flag: %u\n", sps->sps_same_qp_table_for_chroma_flag);
-    printVar("  sps_qp_table_start_minus26: {");
+    PRINT_VAR(sps->sps_bdpcm_enabled_flag);
+    PRINT_VAR(sps->sps_mts_enabled_flag);
+    PRINT_VAR(sps->sps_explicit_mts_intra_enabled_flag);
+    PRINT_VAR(sps->sps_explicit_mts_inter_enabled_flag);
+    PRINT_VAR(sps->sps_lfnst_enabled_flag);
+    PRINT_VAR(sps->sps_joint_cbcr_enabled_flag);
+    PRINT_VAR(sps->sps_same_qp_table_for_chroma_flag);
+    printIndent();
+    printf("  sps_qp_table_start_minus26: {");
     for (int i = 0; i < sps->numQpTables; i++) {
         if (i > 0) {
             printf(",");
@@ -750,7 +761,8 @@ void printSPS(Sequence_Parameter_Set* sps) {
         printf("%i", sps->sps_qp_table_start_minus26[i]);
     }
     printf("}\n");
-    printVar("  sps_num_points_in_qp_table_minus1: {");
+    printIndent();
+    printf("  sps_num_points_in_qp_table_minus1: {");
     for (int i = 0; i < sps->numQpTables; i++) {
         if (i > 0) {
             printf(",");
@@ -758,7 +770,8 @@ void printSPS(Sequence_Parameter_Set* sps) {
         printf("%u", sps->sps_num_points_in_qp_table_minus1[i]);
     }
     printf("}\n");
-    printVar("  sps_delta_qp_in_val_minus1: {");
+    printIndent();
+    printf("  sps_delta_qp_in_val_minus1: {");
     for (int i = 0; i < sps->numQpTables; i++) {
         if (i > 0) {
             printf(",");
@@ -774,7 +787,8 @@ void printSPS(Sequence_Parameter_Set* sps) {
     }
     printf("}\n");
     if (sps->sps_chroma_format_idc != 0) {
-        printVar("  sps_delta_qp_diff_val: {");
+        printIndent();
+        printf("  sps_delta_qp_diff_val: {");
         for (int i = 0; i < sps->numQpTables; i++) {
             if (i > 0) {
                 printf(",");
@@ -790,17 +804,18 @@ void printSPS(Sequence_Parameter_Set* sps) {
         }
         printf("}\n");
     }
-    printVar("  sps_sao_enabled_flag: %u\n", sps->sps_sao_enabled_flag);
-    printVar("  sps_alf_enabled_flag: %u\n", sps->sps_alf_enabled_flag);
-    printVar("  sps_ccalf_enabled_flag: %u\n", sps->sps_ccalf_enabled_flag);
-    printVar("  sps_lmcs_enabled_flag: %u\n", sps->sps_lmcs_enabled_flag);
-    printVar("  sps_weighted_pred_flag: %u\n", sps->sps_weighted_pred_flag);
-    printVar("  sps_weighted_bipred_flag: %u\n", sps->sps_weighted_bipred_flag);
-    printVar("  sps_long_term_ref_pics_flag: %u\n", sps->sps_long_term_ref_pics_flag);
-    printVar("  sps_inter_layer_prediction_enabled_flag: %u\n", sps->sps_inter_layer_prediction_enabled_flag);
-    printVar("  sps_idr_rpl_present_flag: %u\n", sps->sps_idr_rpl_present_flag);
-    printVar("  sps_rpl1_same_as_rpl0_flag: %u\n", sps->sps_rpl1_same_as_rpl0_flag);
-    printVar("  sps_num_ref_pic_lists: {");
+    PRINT_VAR(sps->sps_sao_enabled_flag);
+    PRINT_VAR(sps->sps_alf_enabled_flag);
+    PRINT_VAR(sps->sps_ccalf_enabled_flag);
+    PRINT_VAR(sps->sps_lmcs_enabled_flag);
+    PRINT_VAR(sps->sps_weighted_pred_flag);
+    PRINT_VAR(sps->sps_weighted_bipred_flag);
+    PRINT_VAR(sps->sps_long_term_ref_pics_flag);
+    PRINT_VAR(sps->sps_inter_layer_prediction_enabled_flag);
+    PRINT_VAR(sps->sps_idr_rpl_present_flag);
+    PRINT_VAR(sps->sps_rpl1_same_as_rpl0_flag);
+    printIndent();
+    printf("  sps_num_ref_pic_lists: {");
     for (int i = 0; i < 2; i++) {
         if (i > 0) {
             printf(",");
@@ -813,54 +828,55 @@ void printSPS(Sequence_Parameter_Set* sps) {
             printRPLS(sps->rpls[i][j]);
         }
     }
-    printVar("  sps_ref_wraparound_enabled_flag: %u\n", sps->sps_ref_wraparound_enabled_flag);
-    printVar("  sps_temporal_mvp_enabled_flag: %u\n", sps->sps_temporal_mvp_enabled_flag);
-    printVar("  sps_sbtmvp_enabled_flag: %u\n", sps->sps_sbtmvp_enabled_flag);
-    printVar("  sps_amvr_enabled_flag: %u\n", sps->sps_amvr_enabled_flag);
-    printVar("  sps_bdof_enabled_flag: %u\n", sps->sps_bdof_enabled_flag);
-    printVar("  sps_bdof_control_present_in_ph_flag: %u\n", sps->sps_bdof_control_present_in_ph_flag);
-    printVar("  sps_smvd_enabled_flag: %u\n", sps->sps_smvd_enabled_flag);
-    printVar("  sps_dmvr_enabled_flag: %u\n", sps->sps_dmvr_enabled_flag);
-    printVar("  sps_dmvr_control_present_in_ph_flag: %u\n", sps->sps_dmvr_control_present_in_ph_flag);
-    printVar("  sps_mmvd_enabled_flag: %u\n", sps->sps_mmvd_enabled_flag);
-    printVar("  sps_mmvd_fullpel_only_enabled_flag: %u\n", sps->sps_mmvd_fullpel_only_enabled_flag);
-    printVar("  sps_six_minus_max_num_merge_cand: %u\n", sps->sps_six_minus_max_num_merge_cand);
-    printVar("  sps_sbt_enabled_flag: %u\n", sps->sps_sbt_enabled_flag);
-    printVar("  sps_affine_enabled_flag: %u\n", sps->sps_affine_enabled_flag);
+    PRINT_VAR(sps->sps_ref_wraparound_enabled_flag);
+    PRINT_VAR(sps->sps_temporal_mvp_enabled_flag);
+    PRINT_VAR(sps->sps_sbtmvp_enabled_flag);
+    PRINT_VAR(sps->sps_amvr_enabled_flag);
+    PRINT_VAR(sps->sps_bdof_enabled_flag);
+    PRINT_VAR(sps->sps_bdof_control_present_in_ph_flag);
+    PRINT_VAR(sps->sps_smvd_enabled_flag);
+    PRINT_VAR(sps->sps_dmvr_enabled_flag);
+    PRINT_VAR(sps->sps_dmvr_control_present_in_ph_flag);
+    PRINT_VAR(sps->sps_mmvd_enabled_flag);
+    PRINT_VAR(sps->sps_mmvd_fullpel_only_enabled_flag);
+    PRINT_VAR(sps->sps_six_minus_max_num_merge_cand);
+    PRINT_VAR(sps->sps_sbt_enabled_flag);
+    PRINT_VAR(sps->sps_affine_enabled_flag);
     if (sps->sps_affine_enabled_flag) {
-        printVar("  sps_five_minus_max_num_subblock_merge_cand: %u\n", sps->sps_five_minus_max_num_subblock_merge_cand);
+        PRINT_VAR(sps->sps_five_minus_max_num_subblock_merge_cand);
     }
-    printVar("  sps_6param_affine_enabled_flag: %u\n", sps->sps_6param_affine_enabled_flag);
-    printVar("  sps_affine_amvr_enabled_flag: %u\n", sps->sps_affine_amvr_enabled_flag);
-    printVar("  sps_affine_prof_enabled_flag: %u\n", sps->sps_affine_prof_enabled_flag);
-    printVar("  sps_prof_control_present_in_ph_flag: %u\n", sps->sps_prof_control_present_in_ph_flag);
-    printVar("  sps_bcw_enabled_flag: %u\n", sps->sps_bcw_enabled_flag);
-    printVar("  sps_ciip_enabled_flag: %u\n", sps->sps_ciip_enabled_flag);
-    printVar("  sps_gpm_enabled_flag: %u\n", sps->sps_gpm_enabled_flag);
+    PRINT_VAR(sps->sps_6param_affine_enabled_flag);
+    PRINT_VAR(sps->sps_affine_amvr_enabled_flag);
+    PRINT_VAR(sps->sps_affine_prof_enabled_flag);
+    PRINT_VAR(sps->sps_prof_control_present_in_ph_flag);
+    PRINT_VAR(sps->sps_bcw_enabled_flag);
+    PRINT_VAR(sps->sps_ciip_enabled_flag);
+    PRINT_VAR(sps->sps_gpm_enabled_flag);
     if (sps->sps_gpm_enabled_flag && sps->MaxNumMergeCand >=3) {
-        printVar("  sps_max_num_merge_cand_minus_max_num_gpm_cand: %u\n", sps->sps_max_num_merge_cand_minus_max_num_gpm_cand);
+        PRINT_VAR(sps->sps_max_num_merge_cand_minus_max_num_gpm_cand);
     }
-    printVar("  sps_log2_parallel_merge_level_minus2: %u\n", sps->sps_log2_parallel_merge_level_minus2);
-    printVar("  sps_isp_enabled_flag: %u\n", sps->sps_isp_enabled_flag);
-    printVar("  sps_mrl_enabled_flag: %u\n", sps->sps_mrl_enabled_flag);
-    printVar("  sps_mip_enabled_flag: %u\n", sps->sps_mip_enabled_flag);
-    printVar("  sps_cclm_enabled_flag: %u\n", sps->sps_cclm_enabled_flag);
-    printVar("  sps_chroma_horizontal_collocated_flag: %u\n", sps->sps_chroma_horizontal_collocated_flag);
-    printVar("  sps_chroma_vertical_collocated_flag: %u\n", sps->sps_chroma_vertical_collocated_flag);
-    printVar("  sps_palette_enabled_flag: %u\n", sps->sps_palette_enabled_flag);
-    printVar("  sps_act_enabled_flag: %u\n", sps->sps_act_enabled_flag);
+    PRINT_VAR(sps->sps_log2_parallel_merge_level_minus2);
+    PRINT_VAR(sps->sps_isp_enabled_flag);
+    PRINT_VAR(sps->sps_mrl_enabled_flag);
+    PRINT_VAR(sps->sps_mip_enabled_flag);
+    PRINT_VAR(sps->sps_cclm_enabled_flag);
+    PRINT_VAR(sps->sps_chroma_horizontal_collocated_flag);
+    PRINT_VAR(sps->sps_chroma_vertical_collocated_flag);
+    PRINT_VAR(sps->sps_palette_enabled_flag);
+    PRINT_VAR(sps->sps_act_enabled_flag);
     if (sps->sps_transform_skip_enabled_flag || sps->sps_palette_enabled_flag) {
-        printVar("  sps_min_qp_prime_ts: %u\n", sps->sps_min_qp_prime_ts);
+        PRINT_VAR(sps->sps_min_qp_prime_ts);
     }
-    printVar("  sps_ibc_enabled_flag: %u\n", sps->sps_ibc_enabled_flag);
+    PRINT_VAR(sps->sps_ibc_enabled_flag);
     if (sps->sps_ibc_enabled_flag) {
-        printVar("  sps_six_minus_max_num_ibc_merge_cand: %u\n", sps->sps_six_minus_max_num_ibc_merge_cand);
+        PRINT_VAR(sps->sps_six_minus_max_num_ibc_merge_cand);
     }
-    printVar("  sps_ladf_enabled_flag: %u\n", sps->sps_ladf_enabled_flag);
+    PRINT_VAR(sps->sps_ladf_enabled_flag);
     if (sps->sps_ladf_enabled_flag) {
-        printVar("  sps_num_ladf_intervals_minus2: %u\n", sps->sps_num_ladf_intervals_minus2);
-        printVar("  sps_ladf_lowest_interval_qp_offset: %i\n", sps->sps_ladf_lowest_interval_qp_offset);
-        printVar("  sps_ladf_qp_offset: {");
+        PRINT_VAR(sps->sps_num_ladf_intervals_minus2);
+        PRINT_VAR(sps->sps_ladf_lowest_interval_qp_offset);
+        printIndent();
+        printf("  sps_ladf_qp_offset: {");
         for (int i = 0; i < sps->sps_num_ladf_intervals_minus2 + 1; i++) {
             if (i > 0) {
                 printf(",");
@@ -868,7 +884,8 @@ void printSPS(Sequence_Parameter_Set* sps) {
             printf("%i", sps->sps_ladf_qp_offset[i]);
         }
         printf("}\n");
-        printVar("  sps_ladf_delta_threshold_minus1: {");
+        printIndent();
+        printf("  sps_ladf_delta_threshold_minus1: {");
         for (int i = 0; i < sps->sps_num_ladf_intervals_minus2 + 1; i++) {
             if (i > 0) {
                 printf(",");
@@ -877,20 +894,21 @@ void printSPS(Sequence_Parameter_Set* sps) {
         }
         printf("}\n");
     }
-    printVar("  sps_explicit_scaling_list_enabled_flag: %u\n", sps->sps_explicit_scaling_list_enabled_flag);
+    PRINT_VAR(sps->sps_explicit_scaling_list_enabled_flag);
     if (sps->sps_lfnst_enabled_flag && sps->sps_explicit_scaling_list_enabled_flag) {
-        printVar("  sps_scaling_matrix_for_lfnst_disabled_flag: %u\n", sps->sps_scaling_matrix_for_lfnst_disabled_flag);
+        PRINT_VAR(sps->sps_scaling_matrix_for_lfnst_disabled_flag);
     }
-    printVar("  sps_scaling_matrix_for_alternative_colour_space_disabled_flag: %u\n", sps->sps_scaling_matrix_for_alternative_colour_space_disabled_flag);
+    PRINT_VAR(sps->sps_scaling_matrix_for_alternative_colour_space_disabled_flag);
     if (sps->sps_scaling_matrix_for_alternative_colour_space_disabled_flag) {
-        printVar("  sps_scaling_matrix_designated_colour_space_flag: %u\n", sps->sps_scaling_matrix_designated_colour_space_flag);
+        PRINT_VAR(sps->sps_scaling_matrix_designated_colour_space_flag);
     }
-    printVar("  sps_dep_quant_enabled_flag: %u\n", sps->sps_dep_quant_enabled_flag);
-    printVar("  sps_sign_data_hiding_enabled_flag: %u\n", sps->sps_sign_data_hiding_enabled_flag);
-    printVar("  sps_virtual_boundaries_present_flag: %u\n", sps->sps_virtual_boundaries_present_flag);
-    printVar("  sps_num_ver_virtual_boundaries: %u\n", sps->sps_num_ver_virtual_boundaries);
+    PRINT_VAR(sps->sps_dep_quant_enabled_flag);
+    PRINT_VAR(sps->sps_sign_data_hiding_enabled_flag);
+    PRINT_VAR(sps->sps_virtual_boundaries_present_flag);
+    PRINT_VAR(sps->sps_num_ver_virtual_boundaries);
     if (sps->sps_virtual_boundaries_enabled_flag && sps->sps_virtual_boundaries_present_flag) {
-        printVar("  sps_virtual_boundary_pos_x_minus1: {");
+        printIndent();
+        printf("  sps_virtual_boundary_pos_x_minus1: {");
         for (int i = 0; i < sps->sps_num_ver_virtual_boundaries; i++) {
             if (i > 0) {
                 printf(",");
@@ -899,9 +917,10 @@ void printSPS(Sequence_Parameter_Set* sps) {
         }
         printf("}\n");
     }
-    printVar("  sps_num_hor_virtual_boundaries: %u\n", sps->sps_num_hor_virtual_boundaries);
+    PRINT_VAR(sps->sps_num_hor_virtual_boundaries);
     if (sps->sps_virtual_boundaries_enabled_flag && sps->sps_virtual_boundaries_present_flag) {
-        printVar("  sps_virtual_boundary_pos_y_minus1: {");
+        printIndent();
+        printf("  sps_virtual_boundary_pos_y_minus1: {");
         for (int i = 0; i < sps->sps_num_hor_virtual_boundaries; i++) {
             if (i > 0) {
                 printf(",");
@@ -911,29 +930,29 @@ void printSPS(Sequence_Parameter_Set* sps) {
         printf("}\n");
     }
     if (sps->sps_ptl_dpb_hrd_params_present_flag) {
-        printVar("  sps_timing_hrd_params_present_flag: %u\n", sps->sps_timing_hrd_params_present_flag);
+        PRINT_VAR(sps->sps_timing_hrd_params_present_flag);
         if (sps->sps_timing_hrd_params_present_flag) {
             printGTH(sps->gth);
         }
     }
-    printVar("  sps_sublayer_cpb_params_present_flag: %u\n", sps->sps_sublayer_cpb_params_present_flag);
+    PRINT_VAR(sps->sps_sublayer_cpb_params_present_flag);
     if (sps->sps_ptl_dpb_hrd_params_present_flag && sps->sps_timing_hrd_params_present_flag) {
         printOTH(sps->oth);
     }
-    printVar("  sps_field_seq_flag: %u\n", sps->sps_field_seq_flag);
-    printVar("  sps_vui_parameters_present_flag: %u\n", sps->sps_vui_parameters_present_flag);
+    PRINT_VAR(sps->sps_field_seq_flag);
+    PRINT_VAR(sps->sps_vui_parameters_present_flag);
     if (sps->sps_vui_parameters_present_flag) {
-        printVar("  sps_vui_payload_size_minus1: %u\n", sps->sps_vui_payload_size_minus1);
+        PRINT_VAR(sps->sps_vui_payload_size_minus1);
         printVUI_Pay(sps->vui_pay);
     }
-    printVar("  sps_extension_flag: %u\n", sps->sps_extension_flag);
-    printVar("  sps_range_extension_flag: %u\n", sps->sps_range_extension_flag);
-    printVar("  sps_extension_7bits: %u\n", sps->sps_extension_7bits);
+    PRINT_VAR(sps->sps_extension_flag);
+    PRINT_VAR(sps->sps_range_extension_flag);
+    PRINT_VAR(sps->sps_extension_7bits);
     if (sps->sps_extension_flag && sps->sps_range_extension_flag) {
         printSRE(sps->sre);
     }
     if (sps->sps_extension_7bits) {
-        printVar("  sps_extension_data_flag: %u\n", sps->sps_extension_data_flag);
+        PRINT_VAR(sps->sps_extension_data_flag);
     }
     decIndent();
 }

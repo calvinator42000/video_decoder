@@ -43,29 +43,31 @@ void freeGTH(General_Timing_Hrd_Parameters* gth) {
 void printGTH(General_Timing_Hrd_Parameters* gth) {
     incIndent();
     if (gth == NULL) {
-        printVar("General Timing Hrd Parameters is NULL\n");
+        printIndent();
+        printf("General Timing Hrd Parameters is NULL\n");
         return;
     }
-    printVar("General Timing Hrd Parameters:\n");
-    printVar("  num_units_in_tick: %u\n", gth->num_units_in_tick);
-    printVar("  time_scale: %u\n", gth->time_scale);
-    printVar("  general_nal_hrd_params_present_flag: %u\n", gth->general_nal_hrd_params_present_flag);
-    printVar("  general_vcl_hrd_params_present_flag: %u\n", gth->general_vcl_hrd_params_present_flag);
+    printIndent();
+    printf("General Timing Hrd Parameters:\n");
+    PRINT_VAR(gth->num_units_in_tick);
+    PRINT_VAR(gth->time_scale);
+    PRINT_VAR(gth->general_nal_hrd_params_present_flag);
+    PRINT_VAR(gth->general_vcl_hrd_params_present_flag);
     if (gth->general_nal_hrd_params_present_flag || gth->general_vcl_hrd_params_present_flag) {
-        printVar("  general_same_pic_timing_in_all_ols_flag: %u\n", gth->general_same_pic_timing_in_all_ols_flag);
+        PRINT_VAR(gth->general_same_pic_timing_in_all_ols_flag);
     }
-    printVar("  general_du_hrd_params_present_flag: %u\n", gth->general_du_hrd_params_present_flag);
+    PRINT_VAR(gth->general_du_hrd_params_present_flag);
     if (gth->general_nal_hrd_params_present_flag || gth->general_vcl_hrd_params_present_flag) {
-        printVar("  general_same_pic_timing_in_all_ols_flag: %u\n", gth->general_same_pic_timing_in_all_ols_flag);
+        PRINT_VAR(gth->general_same_pic_timing_in_all_ols_flag);
         if (gth->general_du_hrd_params_present_flag) {
-            printVar("  tick_divisor_minus2: %u\n", gth->tick_divisor_minus2);
+            PRINT_VAR(gth->tick_divisor_minus2);
         }
-        printVar("  bit_rate_scale: %u\n", gth->bit_rate_scale);
-        printVar("  cpb_size_scale: %u\n", gth->cpb_size_scale);
+        PRINT_VAR(gth->bit_rate_scale);
+        PRINT_VAR(gth->cpb_size_scale);
         if (gth->general_du_hrd_params_present_flag) {
-            printVar("  cpb_size_du_scale: %u\n", gth->cpb_size_du_scale);
+            PRINT_VAR(gth->cpb_size_du_scale);
         }
-        printVar("  hrd_cpb_cnt_minus1: %u\n", gth->hrd_cpb_cnt_minus1);
+        PRINT_VAR(gth->hrd_cpb_cnt_minus1);
     }
     decIndent();
 }

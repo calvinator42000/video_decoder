@@ -185,11 +185,3 @@ void decIndent() {
 void printIndent() {
     printf(ctx->print_indent);
 }
-
-void printVar(char* fmt_str, ...) {
-    va_list args;
-    va_start(args, fmt_str);
-    printf(ctx->print_indent);
-    vprintf(fmt_str, args);
-    va_end(args);
-}

@@ -79,21 +79,24 @@ void freePTL(Profile_Tier_Level* ptl) {
 void printPTL(Profile_Tier_Level* ptl) {
     incIndent();
     if (ptl == NULL) {
-        printVar("Profile Tier Level is NULL\n");
+        printIndent();
+        printf("Profile Tier Level is NULL\n");
         return;
     }
-    printVar("Profile Tier Level:\n");
+    printIndent();
+    printf("Profile Tier Level:\n");
     if (ptl->profileTierPresentFlag) {
-        printVar("  general_profile_idc: %u\n", ptl->general_profile_idc);
-        printVar("  general_tier_flag: %u\n", ptl->general_tier_flag);
+        PRINT_VAR(ptl->general_profile_idc);
+        PRINT_VAR(ptl->general_tier_flag);
     }
-    printVar("  general_level_idc: %u\n", ptl->general_level_idc);
-    printVar("  ptl_frame_only_constraint_flag: %u\n", ptl->ptl_frame_only_constraint_flag);
-    printVar("  ptl_multilayer_enabled_flag: %u\n", ptl->ptl_multilayer_enabled_flag);
+    PRINT_VAR(ptl->general_level_idc);
+    PRINT_VAR(ptl->ptl_frame_only_constraint_flag);
+    PRINT_VAR(ptl->ptl_multilayer_enabled_flag);
     if (ptl->profileTierPresentFlag) {
         printGCI(ptl->gci);
     }
-    printVar("  ptl_sublayer_level_present_flag: {");
+    printIndent();
+    printf("  ptl_sublayer_level_present_flag: {");
     for (int i = ptl->MaxNumSubLayerMinus1 - 1; i >= 0; i--) {
         if (i < ptl->MaxNumSubLayerMinus1 - 1) {
             printf(",");
@@ -101,7 +104,8 @@ void printPTL(Profile_Tier_Level* ptl) {
         printf("%u", ptl->ptl_sublayer_level_present_flag[i]);
     }
     printf("}\n");
-    printVar("  sublayer_level_idc: {");
+    printIndent();
+    printf("  sublayer_level_idc: {");
     for (int i = ptl->MaxNumSubLayerMinus1; i >= 0; i--) {
         if (i < ptl->MaxNumSubLayerMinus1) {
             printf(",");
@@ -110,8 +114,9 @@ void printPTL(Profile_Tier_Level* ptl) {
     }
     printf("}\n");
     if (ptl->profileTierPresentFlag) {
-        printVar("  ptl_num_sub_profiles: %u\n", ptl->ptl_num_sub_profiles);
-        printVar("  general_sub_profile_idc: {");
+        PRINT_VAR(ptl->ptl_num_sub_profiles);
+        printIndent();
+        printf("  general_sub_profile_idc: {");
         for (int i = 0; i < ptl->ptl_num_sub_profiles; i++) {
             if (i > 0) {
                 printf(",");

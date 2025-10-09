@@ -33,14 +33,16 @@ void freeSRE(SPS_Range_Extension* sre) {
 void printSRE(SPS_Range_Extension* sre) {
     incIndent();
     if (sre == NULL) {
-        printVar("SPS Range Extension is NULL\n");
+        printIndent();
+        printf("SPS Range Extension is NULL\n");
         return;
     }
-    printVar("SPS Range Extension:\n");
-    printVar("  sps_extended_precision_flag: %u\n", sre->sps_extended_precision_flag);
-    printVar("  sps_ts_residual_coding_rice_present_in_sh_flag: %u\n", sre->sps_ts_residual_coding_rice_present_in_sh_flag);
-    printVar("  sps_rrc_rice_extension_flag: %u\n", sre->sps_rrc_rice_extension_flag);
-    printVar("  sps_persistent_rice_adaptation_enabled_flag: %u\n", sre->sps_persistent_rice_adaptation_enabled_flag);
-    printVar("  sps_reverse_last_sig_coeff_enabled_flag: %u\n", sre->sps_reverse_last_sig_coeff_enabled_flag);
+    printIndent();
+    printf("SPS Range Extension:\n");
+    PRINT_VAR(sre->sps_extended_precision_flag);
+    PRINT_VAR(sre->sps_ts_residual_coding_rice_present_in_sh_flag);
+    PRINT_VAR(sre->sps_rrc_rice_extension_flag);
+    PRINT_VAR(sre->sps_persistent_rice_adaptation_enabled_flag);
+    PRINT_VAR(sre->sps_reverse_last_sig_coeff_enabled_flag);
     decIndent();
 }

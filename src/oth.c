@@ -82,11 +82,14 @@ void freeOTH(OLS_Timing_and_HRD_Parameters* oth) {
 void printOTH(OLS_Timing_and_HRD_Parameters* oth) {
     incIndent();
     if (oth == NULL) {
-        printVar("OLS Timing and HRD Parameters is NULL\n");
+        printIndent();
+        printf("OLS Timing and HRD Parameters is NULL\n");
         return;
     }
-    printVar("OLS Timing and HRD Parameters:\n");
-    printVar("  fixed_pic_rate_general_flag: {");
+    printIndent();
+    printf("OLS Timing and HRD Parameters:\n");
+    printIndent();
+    printf("  fixed_pic_rate_general_flag: {");
     for (uint_t i = oth->firstSubLayer; i <= oth->MaxSubLayersVal; i++) {
         if (i == oth->firstSubLayer) {
             printf(",");
@@ -94,7 +97,8 @@ void printOTH(OLS_Timing_and_HRD_Parameters* oth) {
         printf("%u", oth->fixed_pic_rate_general_flag[i]);
     }
     printf("}\n");
-    printVar("  fixed_pic_rate_within_cvs_flag: {");
+    printIndent();
+    printf("  fixed_pic_rate_within_cvs_flag: {");
     for (uint_t i = oth->firstSubLayer; i <= oth->MaxSubLayersVal; i++) {
         if (i == oth->firstSubLayer) {
             printf(",");
@@ -102,7 +106,8 @@ void printOTH(OLS_Timing_and_HRD_Parameters* oth) {
         printf("%u", oth->fixed_pic_rate_within_cvs_flag[i]);
     }
     printf("}\n");
-    printVar("  elemental_duration_in_tc_minus1: {");
+    printIndent();
+    printf("  elemental_duration_in_tc_minus1: {");
     for (uint_t i = oth->firstSubLayer; i <= oth->MaxSubLayersVal; i++) {
         if (i == oth->firstSubLayer) {
             printf(",");
@@ -114,7 +119,8 @@ void printOTH(OLS_Timing_and_HRD_Parameters* oth) {
         }
     }
     printf("}\n");
-    printVar("  low_delay_hrd_flag: {");
+    printIndent();
+    printf("  low_delay_hrd_flag: {");
     for (uint_t i = oth->firstSubLayer; i <= oth->MaxSubLayersVal; i++) {
         if (i == oth->firstSubLayer) {
             printf(",");
